@@ -1,0 +1,505 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+   <TITLE>NDIALOG native functions</TITLE>
+   <META NAME="Author" CONTENT="orc@pell.chi.il.us">
+   <META NAME="GENERATOR" CONTENT="/usr/bin/vi">
+</HEAD>
+<BODY>
+
+<HR width="80%">
+<CENTER><H3>New dialog functions</H3></CENTER>
+<BLOCKQUOTE>
+Ndialog is built around a collection of display objects, built into
+chains and fed to the MENU() function.  It supports editable strings,
+check buttons, pushbuttons, menu lists, checklists, radio checklists,
+readonly text boxes, and readonly help
+(html <A HREF="helpfile.html">subset</A>)
+boxes.
+</BLOCKQUOTE>
+<BLOCKQUOTE>
+To compile something with ndialog, you need to include the
+header file <TT>ndialog.h</TT> (if you also want to use the dialog
+compatability functions, you also need to include <TT>dialog.h</TT>
+header file.)  When linking, you need to include libnd (<I>libnd_g</I>
+is the debugging version) and several other libraries, as so:
+</BLOCKQUOTE>
+<PRE>
+	-lnd -lpanel -lncurses -lgpm
+</PRE>
+
+<P><CENTER>
+<A HREF="#CHAIN">the MENU() function and object chains</A><BR>
+<A HREF="#OBJECTS">Object operators</A><BR>
+<A HREF="#CREATE">Object constructors</A><BR>
+<A HREF="#WIDGETS">Widgets</A><BR>
+<A HREF="#LIA">List Arrays</A><BR>
+<A HREF="#MISC">Miscellaneous functions</A><BR>
+<A HREF="#EXAMPLES">Examples</A><BR>
+</CENTER></P>
+
+<HR WIDTH=50%>
+<CENTER><A NAME="CHAIN"><H3>The MENU() function and object chains</H3></A></CENTER>
+
+<DL>
+<DT><TT>MENU(objchain,width,depth,title,prompt,flags)</TT>
+<DD><P>The core function of ndialog is <B>MENU</B>, which takes an
+<A HREF="#OBJCHAIN">object chain</A>, displays it, then lets
+the user type input into it.   Object chains are built up
+from objects by the function <B>ObjChain</B>, and are disposed
+of by the function <B>deleteObjChain</B></P>
+<P>The appearance of a MENU form can be slightly modified by
+passing a combination of the following flags to it:
+<DL>
+<DT><B>FANCY_MENU</B>
+<DD>Make the window frame just a little bit fancier than normal.
+<DT><B>ALIGN_LEFT</B>
+<DD>Align the prompt to the left side of the form
+<DT><B>ALIGN_RIGHT</B>
+<DD>Align the prompt to the right side of the form
+<DT><B>ERROR_FLAG</B>
+<DD>print the prompt in a special error color (red, on color terminals)
+to indicate that something bad has happened to it.
+</DL>
+</P>
+<P><b>MENU()</b> has the following return codes:
+<DL>
+<DT><B>MENU_ERROR</B>
+<DD>Something went wrong; look at errno for details.
+<DT><B>MENU_OK</B>
+<DD>The menu processed okay and you can now use the results.
+<DT><B>MENU_CANCEL</B>
+<DD>The user cancelled the menu.
+<DT><B>MENU_ESCAPE</B>
+<DD>The user used <B>Esc</B> to cancel the menu.
+</DL>
+</P>
+
+<DT><TT>Error(fmt,...)</TT>
+<DD>The <b>MENU()</b> error function.  You can override this with your
+own error function, if you so desire.
+<A NAME="OBJCHAIN"></A>
+<DT><TT>ObjChain(chain,obj)</TT>
+<DD>Add an object to an object chain.  If the chain is <B>NULL</B>, create
+a new object chain containing just the object.
+<DT><TT>extractFromObjChain(chain,obj)</TT>
+<DD>extract the given object from the object chain, returning a pointer to
+the new object chain or <B>NULL</B> if something went wrong.
+<DT><TT>sortObjChain(chain)</TT>
+<DD>Sort the object chain according to the (x,y) coordinates of the object
+in the chain.
+<DT><TT>deleteObjChain(chain)</TT>
+<DD>Delete an object chain and all the objects contained in it.
+</DL>
+
+<HR WIDTH=50%>
+<CENTER><A NAME="OBJECTS"><H3>Object operators</H3></A></CENTER>
+
+<BLOCKQUOTE>
+Objects are created by calling one of the
+<A HREF="#CREATE">object constructors</A>
+listed below.  Once created, you can do a few things with them:
+</BLOCKQUOTE>
+<DL>
+<DT><TT>copyObj(obj)</TT>
+<DD>This makes an exact copy of an object (including X and Y position,
+so it's somewhat less than useful for application programmers.)
+<DT><TT>drawObj(obj,display)</TT>
+<DD>draw the object on the given <B>display</B>, which is pointer to
+a magic object
+created by <B>MENU()</B> that tells drawObj how to display itself.
+<DT><TT>editObj(obj,display,event,byevent)</TT>
+<DD><P>Does editing on the given object.  Event is a pointer to an <B>gpm</B>
+MEVENT record, and byevent is set if there is an even pending.  The way
+ndialog events work is that when a mouse event happens inside editObj,
+editObj returns <b>eEVENT</b> so the caller can find out where the mouse
+even happened, find out which object will get the event, then call
+that object with byevent set to true.
+</P>
+<b>editObj</b> has the following return codes:
+<DL>
+<DT><B>eNOP</B>
+<DD>Nothing particular happened.
+<DT><B>eERROR</B>
+<DD>Something wicked happened.  Errno may contain information about the
+fault.
+<DT><B>eCANCEL</B>
+<DD>The user cancelled out of this field.
+<DT><B>eTAB</B>
+<DD>The user pressed <B>[Tab]</B> to advance to the next field.  The
+<A HREF="#CALLBACK">callback</A> for this object will not be fired
+on a <B>eTAB</B> event, so it
+will need to be manually called when we're finished with processing and
+are ready to continue.
+<DT><B>eBACKTAB</B>
+<DD>The user pressed backtab to advance to the previous field.  Otherwise
+like <b>eTAB</b>.
+<DT><B>eRETURN</B>
+<DD>The user pressed <B>[Return]</B> to advance to the next field.  The
+callback for this object <b>is</b> called on a <b>eRETURN</b> event.
+<DT><B>eEVENT</B>
+<DD>A mouse or similar event happened and the caller needs to figure out
+what it was.  As with <b>eTAB</b> and <b>eBACKTAB</b>, the callback
+function will not be called.
+<DT><B>eESCAPE</B>
+<DD>The user pressed <b>Esc</b> to cancel changes to this field.
+<DT><B>eREFRESH</B>
+<DD>The object wants the caller to refresh the screen.
+<DT><B>eEXITFORM</B>
+<DD>The user is finished with input and wishes to exit this form.
+</DL>
+<P>
+<b>editObj</b> may, and probably will, call <b>drawObj</b> to refresh
+fields while it is running.
+</P>
+<DT><TT>deleteObj(obj)</TT>
+<DD>This disposes of the given object, (hopefully) returning all
+resources to the operating system.
+</DL>
+
+<HR WIDTH=50%>
+<CENTER><A NAME="CREATE"><H3>Object constructors</H3></A></CENTER>
+
+<BLOCKQUOTE>
+The object constructers use some, or all, of the following arguments.
+<DL>
+    <DT>x,y
+    <DD>Place the object at (x,y) in the form.  (x,y) is relative to
+    the first line in the form after the prompt.
+
+    <DT>width
+    <DD>This is the width of the editable field.  Any prefixes are not
+    included in this width, nor are any fancy borders around the object.
+
+    <DT>depth
+    <DD>This is the depth of the editable field.  The title is not counted
+    in this depth, nor are any fancy borders around the object.
+
+    <DT>prompt
+    <DD>If a prompt is given, it will be drawn immediately above the editable
+    area in the object.
+
+    <DT>prefix
+    <DD>A prefix is another type of prompt.  It goes immediately to the left
+    of the editable field, unless it contains a <B>|</B>, in which case it
+    will be split into a prefix and a suffix (eg: a prefix of <B>foo|bar</B>
+    will display as <B>foo</B>editable<B>bar</B>).
+
+    <DT>callback
+    <DD>All objects support <A NAME="CALLBACK">callback functions</A>
+    which are called when the
+    user uses <B>[Enter]</B> to finish editing that object.  Callback
+    functions are passed a two <TT>void *</TT> arguments -- a pointer to
+    the object and a pointer to display information, which can be passed
+    to <TT>drawObj</TT> or <TT>editObj</TT> -- and return an status flag
+    (<B>0</B> if the callback failed, <B>1</B> if the callback
+    succeeded, or <B>-1</B> if the callback succeeded and wants the
+    caller to close up shop right now.
+
+    <DT>help
+    <DD>This argument, if given, is the name of a helpfile that gives
+    help for this object.  Helpfiles are an <A HREF=helpfile.html>html
+    subset</A> and are processed by a Help object.  Helpfiles can be
+    pathnames or filenames, though it's better to use <B>setHelpRoot()</B>
+    to set the pathname instead of hardcoding it into the object.
+</DL>
+</BLOCKQUOTE>
+
+<DL>
+    <DT><TT>newString(x,y,width,size,bfr,prompt,prefix,callback,help)</TT>
+    <DD><P>Create a string object located at position x,y inside the window
+    and that has a <B>width</B> column wide editing
+    area.
+    </P>
+
+    <DT><TT>newPWString(x,y,width,size,bfr,prompt,prefix,callback,help</TT>
+    <DD><P>Creates a password string object, which is exactly like a
+    normal string object except that input is not echoed.</P>
+
+    <DT><TT>newCheck(x,y,prompt,prefix,bfr,callback,help)</TT>
+    <DD><P>Creates a check object.  The state of the checkable item
+    is in <B>bfr[0]</B>, which is a character.</P>
+
+    <DT><TT>newButton(number,label,callback,help)</TT>
+    <DD><P>Create a button object.  Buttons are placed on a buttonbar
+    at the bottom of the window, and are placed in order of their
+    <B>number</B> argument (button #1 will be placed to the left of
+    button #2, for example.)  The text on the button is the <B>label</B>
+    argument.</P>
+
+
+    <DT><TT>newOKbutton(number,label,callback,help)</TT>
+    <DD><P>Create an <B>OK</B> button.  An OK button is somewhat like
+    a regular button, except that when it's pushed, and if the callback
+    approves, <B>MENU()</B> will immediately return with a code of MENU_OK.
+    </P>
+
+    <DT><TT>newCancelButton(number,label,callback,help)</TT>
+    <DD><P>Create a <B>Cancel</B> button.  It's exactly like an OK button,
+    except that <B>MENU()</B> immediately returns with a code of MENU_CANCEL.
+    </P>
+
+    <DT><TT>newText(x,y,width,height,size,prompt,prefix,bfr,callback,help)</TT>
+    <DD>Create a Text object.  This is a scrollable readonly field that
+    contains <B>size</B> bytes of text in <B>bfr</B>.
+
+    <DT><TT>newHelp(x,y,width,height,document,callback,help)</TT>
+    <DD>Create a <b>help text</b> object.  <B>Document</B> is a local
+    html page (no file:, http:, url:, mailto:, or whatnot) which is
+    formatted and displayed by this object.   newHelp <b>does not</b>
+    support a full html specification, but it supports enough of <A
+    HREF=helpfile.html> a subset</A> to be able to read a lot of html
+    legibly.
+
+    <DT><A NAME="LIST"></A><TT>newList(x,y,width,height,nritems,items,prompt,prefix,
+    <DD>flags,callback,help)</TT>
+    <P>Create a <b>list</b> object.  <B>Items</B> is an array of
+    <A NAME="ListItem"><B>ListItem</B></A>s (defined in <TT>ndialog.h</TT> as
+<PRE>
+		typedef struct {
+		    char *id;
+		    char *item;
+		    char *help;
+		    char selected;
+		} ListItem;
+</PRE>
+    where the <B>id</B> field is the libdialog key field,
+    and <B>help</B>
+    is context-sensitive help for this <B>ListItem</B>.
+    </P>
+    <P>The <B>flags</B> argument is a bitmap determining how the list
+    will be displayed.
+    <DL>
+    <DT><B>CHECK_SELECTED</B>
+    <DD>place a checkbox in front of each <B>ListItem</B>.
+    <DT><B>HIGHLIGHT_SELECTED</B>
+    <DD>highlight selected items, and use arrow pointers to show the
+    current item.
+    <DT><B>MENU_SELECTION</B>
+    <DD>the list is a <I>menu</I> list; when you select an item, the
+    list object will return control to the caller.
+    <DT><B>SHOW_IDS</B>
+    <DD>When displaying each ListItem, show both the <B>item</B> and
+    the <B>id</B>.  (This is now libdialog works).
+    <DT><B>NO_HOTKEYS</B>
+    <DD>Normally, a list will display with the first character in each
+    item highlit, and you can type that character to jump to that item.
+    If, for some reason, you don't want to be able to do that, you can
+    use this flag.
+    <DT><B>DEL_LIST</B>
+    <DD>Select items from this list when the user presses the DEL key,
+    not when they double-click or press return.
+    <DT><B>ALWAYS_HIGHLIT</B>
+    <DD>Always show the current item a <B>MENU_SELECTION</B> list.
+    <DT><B>DONT_CLIP_ITEMS</B>
+    <DD>Fail if any of the items are too long to fit into the desired window.
+    </DL>
+    </P>
+    <P>You can find out what items are selected inside the callback
+    function by using <TT>getObjList(void* obj)</TT> to get a pointer
+    to the array of <B>ListItem</B>s, <TT>getObjListSize(void *obj)</TT>
+    to get the number of items in the list, then walking the list
+    looking for <B>selected</B> items.
+    </P>
+
+    <DT><TT>newRadioList(x,y,width,height,nritems,items,prompt,prefix,
+    <DD>flags,callback,help)</TT>
+    <P>
+    Creates a radiolist object, which is like a <A HREF="#LIST">list object</A>
+    except that only one item can be selected at a time.
+    </P>
+
+    <DT><TT>newMenu(x,y,width,height,nritems,items,prompt,prefix,
+    <DD>flags,callback,help)</TT>
+    <P>
+    Creates a menu object, which is like a list object except that it
+    returns to the caller as soon as an item is selected.
+    </P>
+
+    <DT><TT>newGauge(x,y,width,percent,prompt,prefix)</TT>
+    <DD>Creates a gauge object, which is a readonly progress gauge,
+    that's displayed as <B>percent</B> filled.
+</DL>
+
+<HR WIDTH=50%>
+<A NAME="WIDGETS"><CENTER><H3>Widgets</H3></CENTER></A>
+<BLOCKQUOTE>
+Widgets are multipart display objects;  they are manipulated exactly the
+same as other objects, but have wads of additional complexity tossed into
+them.
+</BLOCKQUOTE>
+<DL>
+<DT>List Widgets
+<DD><P>
+List widgets are made up of a string, a list, an ADD button, a DELETE
+button, and, optionally, a <A HREF="#listWidgetModify">MODIFY</A> button.
+They can be used for building lists of things, like, oh, dns
+servers, domains to search, and search order.   The list they work on is
+a <A HREF="#LIA">List Array</A> object.
+You use the <TT>newListWidget</TT> or <TT>newEditableList</TT> functions
+to create a list widget.
+</P>
+<P><TT>newListWidget(x, y, width, height, list, prompt, insert&nbsp;callback,
+delete&nbsp;callback, dummy, help);</TT></P>
+<P><TT>newEditableList(x, y, width, height, list, prompt, insert&nbsp;callback,
+delete&nbsp;callback, update&nbsp;callback, help);</TT></P>
+<DL>
+<DT>x,y
+<DD>The X and Y position of the widget on the form that displays it.
+<DT>width, height
+<DD>The width and the height of the <B>list</B>; this is NOT the width
+and the height of the entire widget.  To compute that, add 12 to the 
+width and 3 (4 if you give it a title) to the height.
+<DT>list
+<DD>The <A HREF="#LIA">List Array</A> that this widget works on.
+<DT>prompt
+<DD>A prompt string to go at the top of the widget.
+<DT>insert&nbsp;callback, delete&nbsp;callback
+<DD>These callbacks are called when you insert a new item into the
+list or delete an item from the list.  They do <B>not</B> actually
+insert or delete items from the list; the list widget does that all
+by itself.  All these callbacks do is validate the entry or deletion.
+<DT><A NAME=listWidgetModify>update&nbsp;callback</A>
+<DD>If this callback is nonzero, the list widget will have a
+MODIFY button that call it.
+<DT>help
+<DD>The helpfile.
+</DL>
+</DL>
+<HR WIDTH=50%>
+<CENTER><A NAME="LIA"><H3>List Arrays</H3></A></CENTER>
+<BLOCKQUOTE>
+A <B>List Array</B> is a way to encapsulate an array of
+<A HREF="#ListItem">ListItems</A>.  It is primarily used in
+widget sets, though you can use it to manage your own arrays.
+A List Array is called a <TT>LIA</TT>.
+</BLOCKQUOTE>
+<CENTER>LIA functions</CENTER>
+<DL>
+<DT><TT>LIA newLIA(ListItem *list, int nrlist)</TT>
+<DD>Create a new LIA, initializing it from the given ListItem array.
+If you wish to create an empty LIA, pass 0 for the ListArray.
+<DT><TT>void deleteLIA(LIA obj)</TT>
+<DD>Delete a LIA.</DD>
+<DT><TT>int addToLIA(LIA obj, char *id, char *name, char *help)</TT>
+<DD>Add a ListItem to the LIA.  We pass in the three useful fields of
+the listItem separately.  Note that you must pass valid strings or
+0 for the ListItem fields, because copies are made of these strings
+in the new row in LIA.  <TT>addToLIA</TT> returns the number of rows
+in the list array.
+<DT><TT>int delFromLIA(LIA obj, int row)</TT>
+<DD>Delete the given row from the LIA.  If the row cannot be deleted,
+it returns EOF, otherwise it returns the number of rows left in the
+LIA.
+<DT><TT>int LIAcount(LIA obj)</TT>
+<DD>Returns the number of rows in the LIA.
+<DT><TT>ListItem* LIAlist(LIA obj)</TT>
+<DD>Returns the ListItem array in the LIA.
+</DL>
+<HR WIDTH=50%>
+<CENTER><A NAME="MISC"><H3>Miscellaneous functions</H3></A></CENTER>
+
+<DL>
+<DT><TT>setObjTitle(obj,title)</TT>
+<DD>Set the title for the given object
+<DT><TT>objTitle(obj)</TT>
+<DD>Get the title of the given object
+<DT><TT>setObjData(obj,...)</TT>
+<DD>Set the data for the object.  The arguments depend on the object:
+<DL>
+<DT><B>String</B>
+<DD>setObjData(obj,string, length);
+<DT><B>List</B> [<I>Menu,Checklist,Radiolist</I>]
+<DD>setObjData(obj,0L,items,nritems);
+<DT><B>Text</B> [<I>Help</I>]
+<DD>setObjData(obj,text);
+<DT><B>Check</B>
+<DD>setObjData(obj,check);
+<DT><I>all others</I>
+<DD>setObjData(obj,data pointer);
+</DL>
+<DT><TT>setObjHelp(obj,help)</TT>
+<DD>Set the help for this object.
+<DT><TT>objDataPtr(obj)</TT>
+<DD>Return the data pointer for applicable objects (String, Check, Text)
+<DT><TT>objHelp(obj)</TT>
+<DD>Return the help for this object.
+<DT><TT>objSize(obj,&width,&depth)</TT>
+<DD>Return the area, including prompts, taken up by this object.
+<DT><TT>objAt(obj,&x,&y)</TT>
+<DD>Where is this object located in the window
+<DT><TT>ObjDataAt(obj,&x,&y,&width,&depth)</TT>
+<DD>Where is the data area of this object.
+<DT><TT>objType(obj)</TT>
+<DD>What type of object am I?   I can be <B>O_STRING, O_BUTTON, O_LIST,
+O_TEXT,</B> or <B>O_GAUGE</B>
+<DT><TT>objId(obj)</TT>
+<DD>As above, except a string describing the object is returned.
+<DT><TT>isOKButton(obj)</TT>
+<DD>Am I an OK button?
+<DT><TT>isCancelButton(obj)</TT>
+<DD>Am I a CANCEL button?
+<DT><TT>getObjList(obj)</TT>
+<DD>Returns the array of <B>ListItem</B>s that a list object contains.
+<DT><TT>getObjListSize(obj)</TT>
+<DD>Returns how many <B>ListItems</B>s that a list object contains.
+<DT><TT>getObjCursor(obj)</TT>
+<DD>return the current cursor position in an editable object
+<DT><TT>setObjCursor(obj,cursor)</TT>
+<DD>Set the current cursor position in an editable object
+<DT><TT>setWritable(obj)</TT>
+<DD>Make this object writable
+<DT><TT>setReadonly(obj)</TT>
+<DD>Make this object readonly
+<DT><TT>writable(obj)</TT>
+<DD>Tell us whether this object is writable
+<DT><TT>hideObj(obj)</TT>
+<DD>make this object invisible
+<DT><TT>unhideObj(obj)</TT>
+<DD>make this object visible
+<DT><TT>touchObj(obj)</TT>
+<DD>tell this object to redisplay itself the next time the window is
+redrawn
+<DT><TT>untouchObj(obj)</TT>
+<DD>tell this object <b>not</b> to redisplay itself the next time the
+window is redrawn.
+<DT><TT>touched(obj)</TT>
+<DD>Tell us if the object needs to be redrawn.
+<DT><TT>getHelpTopic(obj)</TT>
+<DD>Return the &lt;TITLE&gt; of a Help object
+<DT><TT>currentHtmlTag(obj)</TT>
+<DD>Return the currently selected html tag from a Help object
+<DT><TT>setHelpRoot(directory)</TT>
+<DD>Set the document root for helpfile lookups (qv: <b>use_helpfile</b>)
+<DT><TT>getHelpCursor(obj)</TT>
+<DD>Allocate a help cursor and return a pointer to it. Help cursors contain
+window positioning state and href linkages, so can't be accessed by the
+conventional <B>getObjCursor()</B> and <B>setObjCursor()</B> methods.
+<DT><TT>setHelpCursor(obj,cursor)</TT>
+<DD>Set the cursor in a help object to the specified location.  If it
+cannot do this, setHelpCursor will return <B>0</B>, otherwise it will
+return <B>1</B>
+</DL>
+
+<!--
+<DT><TT></TT>
+<DD>
+ -->
+
+<HR WIDTH=50%>
+<CENTER><A NAME="EXAMPLES"><H3>Example programs</H3></A></CENTER>
+<DL>
+<DT><A HREF=hello.html>Hello</A>
+<DD><B>Hello, world</B> using ndialog.
+<DT><A HREF=fancyhello.html>Fancyhello</A>
+<DD>A somewhat fancier <B>Hello, world</B> using ndialog.
+<DT><A HREF=login.html>Login</A>
+<DD>The user interface for /sbin/login, as a point and drool'ed app.
+</DL>
+
+<HR width="80%">
+<CENTER><A NAME=Author>Written March 1998 by</A> <A HREF="mailto:orc@pell.chi.il.us">
+David Parsons</A></CENTER>
+
+</BODY>
+</HTML>

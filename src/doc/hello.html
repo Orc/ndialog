@@ -1,0 +1,30 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+   <TITLE>Hello.c -- Hello, world as an ndialog program</TITLE>
+   <META NAME="Author" CONTENT="orc@pell.chi.il.us">
+   <META NAME="GENERATOR" CONTENT="/usr/bin/vi">
+</HEAD>
+<BODY>
+<HR WIDTH=80%>
+<BLOCKQUOTE>
+This is the traditional `Hello,world' program using ndialog:
+</BLOCKQUOTE>
+<PRE>
+/*
+ * cc -o hello hello.c -lnd -lpanel -lncurses -lgpm
+ */
+#include &lt;ndialog.h&gt;
+
+main()
+{
+    init_dialog();
+    MENU(0, -1, -1, 0, "Hello, World!", 0);
+    end_dialog();
+}
+</PRE>
+<HR WIDTH=80%>
+<CENTER ID=Author>Written March 1998 by <A HREF="mailto:orc@pell.chi.il.us">
+David Parsons</A></CENTER>
+</BODY>
+</HTML>

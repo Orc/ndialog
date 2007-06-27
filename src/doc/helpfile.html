@@ -1,0 +1,58 @@
+<HTML>
+<HEAD>
+<TITLE>Help files</TITLE>
+</HEAD>
+<BODY>
+<H1>How help files are made</H1>
+<HR WIDTH=80%>
+
+<P>Help files are html.  A fairly restricted subset of html,
+but html nevertheless.</P>
+
+<DL>
+<DT>&lt;HTML&gt;
+<DD>You encase a helpfile with this and &lt;/HTML&gt;
+<DT>&lt;HEAD&gt;
+<DD>Like a web page, header information, like META and TITLE, goes
+in this section.
+<DT>&lt;TITLE&gt;
+<DD>The titlebar for the display window comes from this section.
+<DT>&lt;H<i>x</i>&gt;
+<DD>Various types of headers.  For the text helpfile driver,
+headers H1 and H2 are boldface uppercase, H3 and H4 are boldface,
+and the rest are simply as is.
+<DT>&lt;BLOCKQUOTE&gt;
+<DD>Indented 4 spaces, width 8 spaces narrower.
+<DT>&lt;P&gt;
+<DD>A paragraph.  You can use ALIGN=LEFT, ALIGN=RIGHT, or ALIGN=CENTER
+to line it up the way you want.
+<DT>&lt;CENTER&gt;
+<DD>A shortcut for &lt;P ALIGN=CENTER&gt; 
+<DT>&lt;A&gt;
+<DD>The traditional navigation tag.  The helpfile driver <b>does not</b>
+understand html: and ftp: urls, just the file: url.
+<DT>&lt;BR&gt;
+<DD>put in a linebreak.
+<DT>&lt;PRE&gt;
+<DD>Do preformatted text.
+<DT>&lt;DL&gt;
+<DD>A html definition list, with items introduced with &lt;DT&gt; and
+item descriptions introduced with &lt;DD&gt;
+<DT>&lt;HR&gt;
+<DD>Horizontal rules.  WIDTH= is supported, though only percentage
+widths are supported.
+<DT>&lt;B&gt;, &lt;I&gt;, &lt;TT&gt;
+<DD>Set the font to bold, italic, or typewriter.
+</DL>
+<BLOCKQUOTE>
+<B>NOTE:</B> The help object supported by ndialog is currently
+<I>not even slightly</I> flexible.  Any misplaced tag will lead
+to your rendered help document looking very bizarre.  One things
+to look out for are to make certain that all &lt;P&gt; and &lt;/P&gt;
+tags are matched and don't nest funnily.
+</BLOCKQUOTE>
+<HR WIDTH=80%>
+<CENTER ID=Author>Written March 1998 by <A HREF="mailto:orc@pell.chi.il.us">
+David Parsons</A></CENTER>
+</BODY>
+</HTML>

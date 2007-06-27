@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+   <TITLE>A quick and dirty NDIALOG reference</TITLE>
+   <META NAME="Author" CONTENT="orc@pell.chi.il.us">
+   <META NAME="GENERATOR" CONTENT="/usr/bin/vi">
+</HEAD>
+<BODY>
+
+<HR width="80%">
+<blockquote>
+This manual page attempts to briefly describe my ndialog library.
+</blockquote>
+<blockquote>
+Ndialog is a outgrowth of some of the work I had been doing on building
+installers for Linux, based on the installation program that comes with
+<A HREF="http://www.freebsd.org">FreeBSD</A>.  This installation program
+used a greatly hacked-up version of the GPL'ed dialog library, with some
+extra glue on it to support multiple items on a form.  I tweaked it into
+shape, converting the extra glue into a generalized MENU() function, and
+used it for a while in my own installers, and later in McAfee's
+WebShield installer.  But, eventually I decided to write my own version;
+first, because libdialog was GPLed, and I preferred to have a free dialog
+library, and secondly because libdialog was a nonmodular pile of hackery,
+made much worse by the tweaks I put into it to make it work with my
+installer.
+</blockquote>
+<blockquote>
+Ndialog is only superficially like libdialog.  It has glue functions that
+provide some libdialog functionality, but it is based on a wad of objects
+that can be glued together and passed to a new (<I>and totally incompatable</I>)
+MENU() function.  It also supports online help, by both the existing dialog
+helpline (<TT>use_helpline(), get_helpline()</TT>), and by an imbedded
+mini-html browser that reads helpfiles.  Also, if you're running <TT>gpm</TT>,
+it supports pointing and clicking with an attached mouse.
+</blockquote>
+<P>
+<HR width="80%">
+<BLOCKQUOTE>
+Dialog takes over the screen and breaks it into two windows; a
+<B>helpline</B> window, which is the botton line on the screen, for
+short reminders about what commands you can do (<I>`F1 for help'</I>,
+for example) and the rest of the screen for windows.  Like libdialog,
+it's kind of stupid about window sizing, but if you ask for an item that
+takes up too much real estate, the dialog functions will return an error
+code instead of exiting the program.
+</BLOCKQUOTE>
+
+
+<CENTER ID="INDEX">
+<A HREF="core.html">Core functions</A><BR>
+<A HREF="dialog.html">Dialog-compatable functions</A><BR>
+<A HREF="ndialog.html">New dialog functions</A><BR>
+<A HREF="ndialog.html#EXAMPLES">Using ndialog in your applications</A><BR>
+</CENTER>
+
+<HR width="80%">
+<CENTER ID=Author>Written March 1998 by <A HREF="mailto:orc@pell.chi.il.us">
+David Parsons</A></CENTER>
+
+</BODY>
+</HTML>

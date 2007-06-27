@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+   <TITLE>Dialog core functions</TITLE>
+   <META NAME="Author" CONTENT="orc@pell.chi.il.us">
+   <META NAME="GENERATOR" CONTENT="/usr/bin/vi">
+</HEAD>
+<BODY>
+
+<HR width="80%">
+<CENTER><H3>Core functions</H3></CENTER>
+<BLOCKQUOTE>
+These functions are exactly like the corresponding libdialog functions,
+for the unsurprising reason that they need to do much the same as they
+would in libdialog.
+</BLOCKQUOTE>
+<DL>
+    <DT><TT>init_dialog()</TT>
+    <DD><P>initialize the dialog library; start curses, allocate colors,
+    clear the screen, allocate the helpline, and so on.</P>
+    <P>After init_dialog(), the screen will be cleared, set to the window
+    color, and (invisibly) broken up into the form window and a one-line
+    helpline window at the bottom of the screen.</P>
+
+    <DT><TT>end_dialog()</TT>
+    <DD>Close up shop and shut curses down.
+
+    <DT><TT>use_helpline(message)</TT>
+    <DD>Set the helpline to the given message.
+
+    <DT><TT>get_helpline()</TT>
+    <DD>Return a pointer to the existing helpline.
+
+    <DT><TT>restore_helpline(message)</TT>
+    <DD>I'm not sure what this does;  it's aliased to <TT>use_helpline()</TT>
+    right now.
+
+    <DT><TT>strwidth(message)</TT>
+    <DD>Return how many columns wide a message is.
+
+    <DT><TT>strdepth(message)</TT>
+    <DT><TT>strheight(message)</TT>
+    <DD>Return how many rows deep a messages is.
+</DL>
+<P ALIGN=CENTER>
+<A HREF="index.html#INDEX">Back to main ndialog page</A>
+</P>
+<HR width="80%">
+<CENTER ID=Author>Written March 1998 by <A HREF="mailto:orc@pell.chi.il.us">
+David Parsons</A></CENTER>
+
+</BODY>
+</HTML>

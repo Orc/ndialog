@@ -1,0 +1,98 @@
+CC=@CC@
+CFLAGS = @CFLAGS@ -I. -Wall -DDYNAMIC_BINDING=1
+LFLAGS = @LDFLAGS@
+
+LIBNAME=nd
+MAJOR=1
+MINOR=1
+
+# a.out shared library information (if I ever get the goddamn
+# a.out shared library generation tools to actually work.)
+
+DLL_ADDR=0x66600000
+DLL_JUMPSIZE=0x4000
+DLL_GOTSIZE=0x4000
+
+
+LIBDIR=@libdir@
+INCDIR=@prefix@/include
+
+OBJS=nd_objects.o ndmenu.o ndwin.o ndedit.o ndutil.o dialog.o nderror.o \
+     ndialog.o yesno.o objchain.o lists.o html.o renderer.o text_obj.o \
+     ndhelp.o list_widget.o indexed_menu.o keypad.o
+HEADERS= dialog.h ndialog.h
+HFILES= indexed_menu.h
+
+CXXFLAGS=$(CFLAGS)
+NDIALOG=libndialog.a
+
+all:    $(NDIALOG)
+
+$(NDIALOG): $(OBJS)
+	$(AR) cr $(NDIALOG) $(OBJS)
+	@RANLIB@ $(NDIALOG)
+
+test:	testhtml testprog testobj mt testdialog testhtml lwb #withdialog
+
+spotless: clean
+	rm -fr obj shared debug nd.tar.gz
+
+clean: libclean testclean
+
+libclean:
+	rm -f $(NDIALOG)
+
+testclean:
+	rm -fr *.o testhtml testobj testprog testdialog mt
+
+mt: mt.o $(NDIALOG)
+	$(CC) $(LFLAGS) -o mt mt.o $(NDIALOG) @LIBS@
+
+testobj: testobj.c $(NDIALOG)
+	$(CC) $(CFLAGS) $(LFLAGS) -o testobj testobj.c $(NDIALOG) @LIBS@
+
+lwb: lwb.c $(NDIALOG)
+	$(CC) $(CFLAGS) $(LFLAGS) -o lwb lwb.c $(NDIALOG) @LIBS@
+
+testprog: testprog.c $(NDIALOG)
+	$(CC) $(CFLAGS) $(LFLAGS) -o testprog testprog.c $(NDIALOG) @LIBS@
+
+testdialog: testdialog.c $(NDIALOG)
+	$(CC) $(CFLAGS) $(LFLAGS) -o testdialog testdialog.c $(NDIALOG) @LIBS@
+
+testhtml: testhtml.c $(NDIALOG)
+	$(CC) $(CFLAGS) $(LFLAGS) -o testhtml testhtml.c $(NDIALOG) @LIBS@
+
+install: all
+	-mkdir $(LIBDIR)
+	@INSTALL_DATA@ $(NDIALOG) $(LIBDIR)
+	-mkdir $(INCDIR)
+	@INSTALL_DATA@ $(HEADERS) $(INCDIR)
+	-mkdir $(INCDIR)/nd
+	@INSTALL_DATA@ $(HFILES) $(INCDIR)/nd
+
+## -- when I get an automatic dependency generator that works with
+## -- both BSD and GNU make, everything below this line will be
+## -- automatically generated, so DON'T EDIT ANYTHING BELOW HERE.
+## -- snip snip snip! --
+nd_objects.o:   nd_objects.c nd_objects.h ndialog.h ndwin.h \
+	        curse.h html.h ../config.h
+ndmenu.o:       ndmenu.c ndwin.h curse.h nd_objects.h ndialog.h ../config.h
+ndwin.o:        ndwin.c ndwin.h curse.h nd_objects.h ndialog.h ../config.h
+ndedit.o:       ndedit.c ndwin.h curse.h nd_objects.h ndialog.h ../config.h
+ndutil.o:       ndutil.c nd_objects.h ndialog.h ndwin.h curse.h \
+		html.h ../config.h
+dialog.o:       dialog.c nd_objects.h ndialog.h dialog.h curse.h ../config.h
+nderror.o:      nderror.c ../config.h
+ndialog.o:      ndialog.c curse.h ../config.h
+yesno.o:        yesno.c nd_objects.h ndialog.h dialog.h curse.h ../config.h
+objchain.o:     objchain.c nd_objects.h ndialog.h ndwin.h curse.h ../config.h
+lists.o:        lists.c nd_objects.h ndialog.h dialog.h curse.h ../config.h
+html.o:         html.c html.h bytecodes.h ../config.h
+renderer.o:     renderer.c html.h bytecodes.h ../config.h
+text_obj.o:     text_obj.c ndwin.h curse.h nd_objects.h ndialog.h html.h \
+                bytecodes.h ../config.h
+ndhelp.o:       ndhelp.c curse.h nd_objects.h ndialog.h ../config.h
+list_widget.o:  list_widget.c ndwin.h ../config.h
+indexed_menu.o: indexed_menu.c nd_objects.h ndialog.h dialog.h curse.h \
+                ndwin.h ../config.h

@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+   <TITLE>Fancyhello.c -- Hello, world as an ndialog program</TITLE>
+   <META NAME="Author" CONTENT="orc@pell.chi.il.us">
+   <META NAME="GENERATOR" CONTENT="/usr/bin/vi">
+</HEAD>
+<BODY>
+<HR WIDTH=80%>
+<BLOCKQUOTE>
+This is a more conventionally gui'ed version of `Hello, world',
+that will sit there sulking until you press the DONE button:
+</BLOCKQUOTE>
+<PRE>
+/*
+ * cc -o fancyhello fancyhello.c -lnd -lpanel -lncurses -lgpm
+ */
+#include &lt;ndialog.h&gt;
+
+main()
+{
+    int rc;
+    void *chain;
+
+
+    chain = ObjChain(0, newOKButton(0, "Done", 0, 0));
+
+    init_dialog();
+    rc = MENU(chain, -1, -1, 0, "Hello, World!", 0);
+    end_dialog();
+
+    deleteObjChain(chain);
+
+    exit(rc == MENU_OK ? 0 : 1);
+}
+</PRE>
+
+<BLOCKQUOTE>
+This produces pretty much exactly the same output
+as calling the dialog compatable function
+<TT>dialog_mesgbox(0,"Hello, World!", -1, -1);</TT>
+</BLOCKQUOTE>
+
+<HR WIDTH=80%>
+<CENTER ID=Author>Written March 1998 by <A HREF="mailto:orc@pell.chi.il.us">
+David Parsons</A></CENTER>
+</BODY>
+</HTML>

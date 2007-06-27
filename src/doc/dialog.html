@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+   <TITLE>Libdialog compatability functions</TITLE>
+   <META NAME="Author" CONTENT="orc@pell.chi.il.us">
+   <META NAME="GENERATOR" CONTENT="/usr/bin/vi">
+</HEAD>
+<BODY>
+
+<HR width="80%">
+<CENTER><H3>Dialog compatablity functions</H3></CENTER>
+<BLOCKQUOTE>
+All these functions pop up a window containing the prompt and, if
+appropriate, a box containing whatever the dialog wants to display.
+They are all built up from <A HREF=ndialog.html>ndialog objects and the
+MENU() display function</A>.
+</BLOCKQUOTE>
+<DL>
+    <DT><TT>dialog_yesno(title,message,height,width)</TT>
+    <DD>Put up a dialog box asking for a yes/no answer.  You can autosize
+    the dialog box by setting height and width to <B>-1</B>.
+
+    <DT><TT>dialog_msgbox(title,message,height,width,pause)</TT>
+    <DD>Put up a dialog box with a message in it.  If <TT>pause</TT> is
+    nonzero, a <B>[OK]</B> button will be displayed and the function
+    will wait until you press it, otherwise it will immediately return.
+
+    <DT><TT>dialog_mesgbox(title,message,height,width)</TT>
+    <DD><P>Put up a dialog box with a message in it and wait for the user
+    to press the <B>[OK]</B> button.</P>
+    <P><B>NOTE:</B> This is not correctly implemented.  If you pass it a
+    message string that's longer or wider than the screen,
+    <TT>dialog_mesgbox</TT> will silently fail.</P>
+
+    <DT><TT>dialog_menu(title,message,height,width,menu_height,
+    <DD>menu_items,items,result,ch,sc)</TT>
+    <P>Put up a menu box and wait for the user to select a menu item or
+    cancel out of the box.</P>
+    <DL>
+    <DT>title
+    <DD>The title on the dialog window
+    <DT>message
+    <DD>A message printed at the top of the dialog window
+    <DT>width
+    <DD>How wide the window should be (-1 for autosizing)
+    <DT>height
+    <DD>How deep the window should be (-1 for autosizing)
+    <DT>menu_height
+    <DD>How many items in the menu should be visible at any time
+    (Note that this needs to be 3 less than height, because room is
+    needed for the <B>[CANCEL]</B> button and a separator line.)
+    <DT>menu_items
+    <DD>How long menu[] is.
+    <DT>menu
+    <DD>The menu items, as an array of pairs of strings.  The first
+    string (<B>menu[x+x]</B>) is a keyword for this menu item, the
+    second string (<B>menu[x+x+1]</B>) is the description for this
+    menu item.  You need to make certain that <B>menu</B> contains
+    <B>2*menu_items</B> entries, or hilarious crashes will happen.
+    <DT>result
+    <DD>A string that holds the selected keyword.
+    <DT>ch,sc
+    <DD>Horrible compatability kludges to keep track of the last item
+    selected.  You need to set them to zero before you call dialog_menubox.
+    </DL>
+
+    <DT><TT>dialog_checklist(title,message,height,width,list_height,
+    <DD>nr_list,items,result)</TT>
+    <P>Like <TT>dialog_menubox()</TT>, except it puts up a list of checkable
+    items.   Note that there are no <B>ch</B> and <B>sc</B> parameters,
+    and that the <B>menu</B> parameter is slightly different.  For <TT>
+    dialog_checklist</TT>, <B>menu</B> is composed of string triples;
+    <B>menu[x+x]</B> is the key, <B>menu[x+x+1]</B> is the description,
+    and <B>menu[x+x+2]</B> is the value <B>on</B> to tell the function
+    that this item is selected.   If the user does not cancel out of
+    this form, <B>result</B> contains a whitespace-delimited list of
+    selected keywords.</P>
+
+    <DT><TT>dialog_radiolist(title,message,height,width,list_height,
+    <DD>nr_list,items,result)</TT>
+    <P>Like <TT>dialog_checklist()</TT>, except only one item can be checked
+    at a time.
+    </P>
+
+    <DT><TT>dialog_gauge(title,message,y,x,height,width,perc)</TT>
+    <DD><P>Display a window that contains a progress gauge (from <B>0%
+    </B>to <B>100%</B>)
+    </P>
+
+
+    <DT><TT>dialog_clear_norefresh()</TT>
+    <DD><P>clears the current window, but doesn't refresh the screen.</P>
+
+    <DT><TT>dialog_clear()</TT>
+    <DD><P>clears the current window and refreshes the screen.
+    </P>
+
+    <DT><TT>dialog_update()</TT>
+    <DD><P>updates the window, like the curses function <B>wrefresh</B>
+    </P>
+</DL>
+<P ALIGN=CENTER>
+<A HREF="index.html#INDEX">Back to main ndialog page</A>
+</P>
+<HR width="80%">
+<CENTER ID=Author>Written March 1998 by <A HREF="mailto:orc@pell.chi.il.us">
+David Parsons</A></CENTER>
+
+</BODY>
+</HTML>
