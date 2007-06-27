@@ -85,6 +85,7 @@ typedef struct {
     char* prompt;		/* circles and arrows and a paragraph on the
 				 * back... */
     int fancy;			/* is it a fancy window? */
+    int wholescreen;		/* will it take up the entire screen */
     int flags;			/* other flags passed to MENU() */
     int promptwidth;		/* widest part of the prompt */
     int depth;			/* number of lines in the menu */
@@ -233,10 +234,13 @@ refreshMenu(refreshParms* p)
     int origin;
     WINDOW *win = Window(p->menu);
     int formy = WY(p->menu);
+    Obj *current = 0;
 
     werase(win);
     setcolor(win, WINDOW_COLOR);
-    if (p->fancy)
+    if (p->wholescreen)
+	/* no window! */;
+    else if (p->fancy)
 	fancywin(win, p->depth, p->width, p->title, formy, p->buttons);
     else
 	simplewin(win, p->depth, p->width, p->title, formy, p->buttons);
@@ -265,8 +269,15 @@ refreshMenu(refreshParms* p)
     /* display all the items on the list
      */
     for (idx=0; idx<p->nritems; idx++) {
+	if (IS_CURRENT(p->items[idx])) {
+	    if (current)
+		drawObj(current, p->menu);
+	    current = p->items[idx];
+	}
 	drawObj(p->items[idx], p->menu);
     }
+    if (current)
+	drawObj(current, p->menu);
 #if !HAVE_DOUPDATE
     wrefresh(win);
 #endif
@@ -346,6 +357,7 @@ MENU(void *chain, int width, int depth, char *title, char *prompt, int flags)
 #else
     int fancy = 0;
 #endif
+    int wholescreen = 0;
 				/* fancy borders on windows? */
 #if VERMIN
     int bymouse;		/* editing flag to tell editObj() that it */
@@ -389,7 +401,13 @@ MENU(void *chain, int width, int depth, char *title, char *prompt, int flags)
 
     /* figure out the dimensions of the form if we have to
      */
-    if (width == -1 || depth == -1) {
+    if (width == 0 && depth == 0) {
+	width = COLS;
+	depth = LINES;
+	wholescreen = 1;
+	formy += strdepth(prompt);
+    }
+    else if (width == -1 || depth == -1) {
 	/* We need to figure out the form dimensions from the
 	 * objects in the form.
 	 */
@@ -455,7 +473,7 @@ MENU(void *chain, int width, int depth, char *title, char *prompt, int flags)
     /* the interior width is the space between the borders.  We use
      * it for autopositioning centered objects
      */
-    interiorwidth = width-2;
+    interiorwidth = wholescreen ? width : (width-2);
 
     if (fancy && width < COLS-2 && depth < LINES-2) {
 	/* we have enough room for a fancy embossed look to the window */
@@ -470,7 +488,7 @@ MENU(void *chain, int width, int depth, char *title, char *prompt, int flags)
     /* the button bar will be the last line on the form.  If there are
      * no buttons, this will be gleefully ignored
      */
-    buttony = depth-2;
+    buttony = wholescreen ? (depth-1) : (depth-2);
 
     if (chain != 0) {
 	/* build the item[] array and populate it from all the non-button
@@ -487,7 +505,8 @@ MENU(void *chain, int width, int depth, char *title, char *prompt, int flags)
 		/* tweak the X position of this object so that the object will
 		 * be centered in the menu.
 		 */
-		OBJ(cur)->x = ((interiorwidth - OBJ(cur)->width) / 2) - 1;
+		OBJ(cur)->x = ((interiorwidth - OBJ(cur)->width) / 2);
+		OBJ(cur)->x -= wholescreen ? 2 : 1;
 		if (OBJ(cur)->x < 0)
 		    OBJ(cur)->x = 0;
 		OBJ(cur)->selx += OBJ(cur)->x;
@@ -578,12 +597,10 @@ MENU(void *chain, int width, int depth, char *title, char *prompt, int flags)
 #if HAVE_KEYPAD
     keypad(menu, TRUE);
 #endif
-    cbreak();
+    raw();
     nonl();
     noecho();
-#if WITH_NCURSES
     leaveok(menu, FALSE);
-#endif
 
 #if VERMIN
     mousemask(BUTTON1_PRESSED|BUTTON1_CLICKED|BUTTON1_DOUBLE_CLICKED, &mev);
@@ -599,6 +616,7 @@ MENU(void *chain, int width, int depth, char *title, char *prompt, int flags)
      */
     menuInfo.menu        = display;
     menuInfo.fancy       = fancy;
+    menuInfo.wholescreen = wholescreen;
     menuInfo.depth       = depth;
     menuInfo.width       = width;
     menuInfo.title       = title;

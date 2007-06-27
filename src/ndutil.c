@@ -917,3 +917,33 @@ beep()
     write(fileno(stdout), "\007", 1);
 }
 #endif
+
+
+/*
+ * from_dialog() switches the terminal settings back to what they were
+ *               before dialog started.
+ */
+void
+from_dialog()
+{
+    echo();
+    nl();
+    noraw();
+    resetty();
+} /* from_dialog */
+
+
+/*
+ * to_dialog() return to dialog mode.
+ */
+void
+to_dialog()
+{
+    savetty();
+    noecho();
+    nonl();
+    raw();
+#if !HAVE_KEYPAD
+    if (KS) { fputs(KS,stdout); fflush(stdout); }
+#endif
+} /* to_dialog() */

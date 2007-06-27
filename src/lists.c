@@ -176,12 +176,12 @@ ndialog_list(char *title, char *prompt,
     /* check that the height and width are okay */
 
     /* height.  `2' because that's the depth of a buttonbar */
-    if (height >= 0 && height < list_height+promptdepth+2) {
+    if (height > 0 && height < list_height+promptdepth+2) {
 	errno = EINVAL;
 	goto byebye;
     }
     /* width */
-    if (width >= 0 && width < framewidth) {
+    if (width > 0 && width < framewidth) {
 	errno = EINVAL;
 	goto byebye;
     }

@@ -253,6 +253,11 @@ void restore_helpline(char*);	/* a rose by any other name would smell as
 				 * sweet
 				 */
 
+/* Wrappers for running external programs
+ */
+void to_dialog();		/* switch into dialog terminal settings */
+void from_dialog();		/* switch away from dialog terminal settings */
+
 
 /*
  * Widgets

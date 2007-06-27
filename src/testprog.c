@@ -97,7 +97,7 @@ main(int argc, char **argv)
 	switch (atoi(argv[1])) {
 	default:
 		use_helpline("[TAB] to move, [ESC] to exit");
-		st = MENU(chain, -1, -1, "title",
+		st = MENU(chain, 0, 0, "title",
 		   "SCIENTIFIC PROGRESS\nGOES BONK", FANCY_MENU|ALIGN_RIGHT);
 		if (st == MENU_ERROR)
 		    perror("MENU");

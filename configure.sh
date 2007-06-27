@@ -33,10 +33,10 @@ check_ncurses() {
 	$__fail 1
     fi
 
-    if LIBS="-lncurses" AC_CHECK_FUNCS keypad WITH_NCURSES; then
+    if LIBS="-lncurses" AC_CHECK_FUNCS start_color WITH_NCURSES; then
 	AC_LIBS="$AC_LIBS -lncurses"
 	return 0
-    elif LIBS="-lcurses" AC_CHECK_FUNCS keypad WITH_NCURSES; then
+    elif LIBS="-lcurses" AC_CHECK_FUNCS start_color WITH_NCURSES; then
 	AC_LIBS="$AC_LIBS -lcurses"
 	return 0
     elif LIBS="-lcurses" AC_CHECK_FUNCS initscr WITH_BSD_CURSES; then
@@ -98,10 +98,10 @@ if [ ! "$WITH_BSD_CURSES" ]; then
     LIBS="$AC_LIBS" AC_CHECK_FUNCS beep
     LIBS="$AC_LIBS" AC_CHECK_FUNCS curs_set
     LIBS="$AC_LIBS" AC_CHECK_FUNCS ripoffline
-    LIBS="$AC_LIBS" AC_CHECK_FUNCS doupdate
-    LIBS="$AC_LIBS" AC_CHECK_FUNCS keypad
     LIBS="$AC_LIBS" AC_CHECK_FUNCS start_color
 fi
+LIBS="$AC_LIBS" AC_CHECK_FUNCS doupdate
+LIBS="$AC_LIBS" AC_CHECK_FUNCS keypad
 
 MF_PATH_INCLUDE RANLIB ranlib true || AC_CONFIG RANLIB ':'
 

@@ -321,6 +321,7 @@ drawButton(void *obj, void *w)
     setcolor(win, boxcolor);
     waddch(win, '[');
     highlight = (OBJ(obj)->content && *((int*)(OBJ(obj)->content)) != 0);
+    getyx(win,y,x);
     if (OBJ(obj)->flags & OBJ_CLICKED) {
 	setcolor(win, PRESSED_COLOR);
 	waddstr(win, OBJ(obj)->title);
@@ -331,6 +332,7 @@ drawButton(void *obj, void *w)
     }
     setcolor(win, boxcolor);
     waddch(win, ']');
+    wmove(win,y,x);
 } /* drawButton */
 
 
@@ -345,6 +347,7 @@ drawCheck(void *obj, void *w)
     WINDOW *win = Window(w);
     int x = WX(w),
 	y = WY(w);
+    int vx,vy;
 
     if (obj == 0 || OBJ(obj)->Class != O_CHECK)
 	return;
@@ -365,19 +368,20 @@ drawCheck(void *obj, void *w)
 	waddstr(win, OBJ(obj)->prefix);
     setcolor(win, boxcolor);
     waddch(win, '[');
+    getyx(win,vy,vx);
+    waddstr(win, " ]");
+    setcolor(win, objcolor);
+    if (OBJ(obj)->suffix)
+	waddstr(win, OBJ(obj)->suffix);
 #if 0
     if (IS_CURRENT(obj))
 	setcolor(win, SELECTED_COLOR);
 #endif
-    if (OBJ(obj)->content && *(char*)(OBJ(obj)->content) != 0)
-	waddch(win, 'X');
-    else
-	waddch(win, ' ');
-    setcolor(win, boxcolor);
-    waddch(win, ']');
+    wmove(win,vy,vx);
+    waddch(win, (OBJ(obj)->content && *(char*)(OBJ(obj)->content)) ? 'X' : ' ');
+#if 0
     setcolor(win, objcolor);
-    if (OBJ(obj)->suffix)
-	waddstr(win, OBJ(obj)->suffix);
+#endif
 } /* drawCheck */
 
 

@@ -21,7 +21,7 @@ OBJS=nd_objects.o ndmenu.o ndwin.o ndedit.o ndutil.o dialog.o nderror.o \
      ndialog.o yesno.o objchain.o lists.o html.o renderer.o text_obj.o \
      ndhelp.o list_widget.o indexed_menu.o keypad.o
 HEADERS= dialog.h ndialog.h
-HFILES= indexed_menu.h
+HFILES= indexed_menu.h keypad.h
 
 CXXFLAGS=$(CFLAGS)
 NDIALOG=libndialog.a
@@ -76,23 +76,34 @@ install: all
 ## -- automatically generated, so DON'T EDIT ANYTHING BELOW HERE.
 ## -- snip snip snip! --
 nd_objects.o:   nd_objects.c nd_objects.h ndialog.h ndwin.h \
-	        curse.h html.h ../config.h
-ndmenu.o:       ndmenu.c ndwin.h curse.h nd_objects.h ndialog.h ../config.h
-ndwin.o:        ndwin.c ndwin.h curse.h nd_objects.h ndialog.h ../config.h
-ndedit.o:       ndedit.c ndwin.h curse.h nd_objects.h ndialog.h ../config.h
+	        curse.h html.h ../config.h keypad.h
+ndmenu.o:       ndmenu.c ndwin.h curse.h nd_objects.h ndialog.h \
+		../config.h keypad.h
+ndwin.o:        ndwin.c ndwin.h curse.h nd_objects.h ndialog.h \
+		../config.h keypad.h
+ndedit.o:       ndedit.c ndwin.h curse.h nd_objects.h ndialog.h \
+		../config.h keypad.h
 ndutil.o:       ndutil.c nd_objects.h ndialog.h ndwin.h curse.h \
-		html.h ../config.h
-dialog.o:       dialog.c nd_objects.h ndialog.h dialog.h curse.h ../config.h
-nderror.o:      nderror.c ../config.h
-ndialog.o:      ndialog.c curse.h ../config.h
-yesno.o:        yesno.c nd_objects.h ndialog.h dialog.h curse.h ../config.h
-objchain.o:     objchain.c nd_objects.h ndialog.h ndwin.h curse.h ../config.h
-lists.o:        lists.c nd_objects.h ndialog.h dialog.h curse.h ../config.h
+		html.h ../config.h keypad.h
+dialog.o:       dialog.c nd_objects.h ndialog.h dialog.h curse.h \
+		../config.h keypad.h
+nderror.o:      nderror.c ../config.h keypad.h
+ndialog.o:      ndialog.c curse.h ../config.h keypad.h
+yesno.o:        yesno.c nd_objects.h ndialog.h dialog.h curse.h \
+		../config.h keypad.h
+objchain.o:     objchain.c nd_objects.h ndialog.h ndwin.h curse.h \
+		../config.h keypad.h
+lists.o:        lists.c nd_objects.h ndialog.h dialog.h curse.h \
+		../config.h keypad.h
 html.o:         html.c html.h bytecodes.h ../config.h
 renderer.o:     renderer.c html.h bytecodes.h ../config.h
 text_obj.o:     text_obj.c ndwin.h curse.h nd_objects.h ndialog.h html.h \
-                bytecodes.h ../config.h
+                bytecodes.h ../config.h keypad.h
 ndhelp.o:       ndhelp.c curse.h nd_objects.h ndialog.h ../config.h
-list_widget.o:  list_widget.c ndwin.h ../config.h
+list_widget.o:  list_widget.c ndwin.h ../config.h keypad.h
 indexed_menu.o: indexed_menu.c nd_objects.h ndialog.h dialog.h curse.h \
-                ndwin.h ../config.h
+                ndwin.h ../config.h keypad.h
+keypad.o:       curse.h ../config.h keypad.h
+testprog.o:     dialog.h ndialog.h ../config.h
+testdialog.o:   dialog.h ../config.h
+

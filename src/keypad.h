@@ -32,63 +32,34 @@
  *  IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  *  THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef _CURSE_DEFINED
-#define _CURSE_DEFINED	1
 
-#include "../config.h"
+#ifndef __NDIALOG_KEYPAD_H
+#define __NDIALOG_KEYPAD_H
 
-#if WITH_NCURSES
-#   include <@CURSES_HEADER@>
-#   ifdef HAVE_PANEL
-#      include <@PANEL_HEADER@>
-#   endif
-#   ifdef KEY_MOUSE
-#       define VERMIN	1
-#   else
-#       define VERMIN	0
-#	define MEVENT	void
-#   endif
+#define KEY_F(x)	((x)<<8)
+#define KEY_F0		0x0100
+#define KEY_F1		0x0200
+#define KEY_F2		0x0300
+#define KEY_F3		0x0400
+#define KEY_F4		0x0500
+#define KEY_F5		0x0600
+#define KEY_F6		0x0700
+#define KEY_F7		0x0800
+#define KEY_F8		0x0900
+#define KEY_F9		0x1000
+#define KEY_BACKSPACE	0x1100	/* erase char */
+#define KEY_BTAB	0x1200	/* M-\t */
+#define KEY_DC		0x1300	/* M-x */
+#define KEY_DOWN	0x1400  /* M-j */
+#define KEY_END		0x1500	/* M-g */
+#define KEY_HOME	0x1600	/* M-s */
+#define KEY_IC		0x1700	/* M-i */
+#define KEY_LEFT	0x1800	/* M-h */
+#define KEY_NPAGE	0x1900	/* M-f */
+#define KEY_PPAGE	0x1a00	/* M-u */
+#define KEY_RIGHT	0x1b00	/* M-l */
+#define KEY_UP		0x1c00	/* M-k */
 
-#   define READONLY_COLOR	A_DIM
-#   define CURRENT_COLOR	A_BOLD
+#endif/*!__NDIALOG_KEYPAD_H*/
 
-#   define NT_RARROW		ACS_RARROW
-#   define NT_LARROW		ACS_LARROW
 
-#   define setcolor(w,c)	wattrset(w,c)
-
-#else
-#   include <@CURSES_HEADER@>
-    typedef int chtype;
-#   define VERMIN	0
-#   define MEVENT	void
-
-#   define READONLY_COLOR	0
-#   define CURRENT_COLOR	0x01
-
-#   define NT_RARROW		'>'
-#   define NT_LARROW		'<'
-
-extern void setcolor(WINDOW *w, int c);
-#endif
-
-extern int ndwgetch(WINDOW *w);
-
-#if !HAVE_WADDNSTR
-extern void waddnstr(WINDOW *, char *, int);
-#endif
-
-#if !HAVE_BEEP
-extern void beep();
-#endif
-
-#if !HAVE_PANEL
-extern void ndredraw();
-#endif
-
-#if !HAVE_KEYPAD
-extern int keypad(void*,int);
-#   include "keypad.h"
-#endif
-
-#endif /*_CURSE_DEFINED*/

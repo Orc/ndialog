@@ -84,7 +84,6 @@ init_dialog()
     if ((topwin = initscr()) == (WINDOW*)0)
 	return;
     savetty();
-    keypad(stdscr, 1);
     noecho();
     nonl();
     raw();
@@ -176,10 +175,10 @@ end_dialog()
     del_panel(root);
 #endif
     mvcur(0,0,COLS-1,0);
-    resetty();
     echo();
     nl();
     noraw();
+    resetty();
     endwin();
 } /* end_dialog */
 
