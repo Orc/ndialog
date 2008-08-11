@@ -43,7 +43,6 @@ static const char rcsid[] = "$Id$";
 #include "dialog.h"
 
 #include <stdlib.h>
-#include <malloc.h>
 #include <errno.h>
 #include <string.h>
 

@@ -41,7 +41,7 @@ static const char rcsid[] = "$Id";
 
 #include "html.h"
 #include "bytecodes.h"
-#include <malloc.h>
+#include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 

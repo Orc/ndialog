@@ -40,7 +40,7 @@ static const char rcsid[] = "$Id$";
 #include "nd_objects.h"
 #include "curse.h"
 #include "dialog.h"
-#include <malloc.h>
+#include <stdlib.h>
 #include <errno.h>
 #include <string.h>
 

@@ -57,7 +57,7 @@ static const char rcsid[] = "$Id: s.ndmenu.c 1.22 00/05/21 16:33:42-00:00 orc $"
 #include "nd_objects.h"
 
 #include <errno.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include <string.h>
 #include <termios.h>
 
@@ -639,13 +639,15 @@ MENU(void *chain, int width, int depth, char *title, char *prompt, int flags)
     /* |vvv| should all this be another function? |vvv| */
 
     /* put the cursor on the first writable item */
-    for (idx = (flags&AT_BUTTON) ? firstbutton : 0; !writable(items[idx]); idx++)
-	if (idx == nritems) {
-	    /* nothing to write?  Bummer. */
-	    wrefresh(menu);
-	    status = MENU_OK;
-	    goto byebye;
-	}
+    for (idx = (flags&AT_BUTTON) ? firstbutton : 0; (idx < nritems) && !writable(items[idx]); idx++)
+	;
+	
+    if (idx >= nritems) {
+	/* nothing to write?  Bummer. */
+	wrefresh(menu);
+	status = MENU_OK;
+	goto byebye;
+    }
 
     rc = eNOP;
     while (1) {

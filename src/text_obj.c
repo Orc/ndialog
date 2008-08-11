@@ -119,15 +119,15 @@ newHelp(int x, int y, int width, int height,
 	    page->titlelen = strlen(page->title);
 	    page->page     = malloc(100+strlen(filename));
 	    if (page->page)
-		sprintf(page->page, "%s: %s\n", filename, strerror(errno));
-	    page->pagelen = strlen(page->page);
+		sprintf((char*)(page->page), "%s: %s\n", filename, strerror(errno));
+	    page->pagelen = strlen((char*)(page->page));
 	}
     }
     if (!page)
 	return 0;
 
     tmp = newText(x, y, width, height,
-		  page->pagelen, 0, "", page->page, callback, help);
+		  page->pagelen, 0, "", (char*)(page->page), callback, help);
     if (tmp) {
 	tmp->item.text.class = T_IS_HTML;
 	tmp->item.text.width = tmp->width;
@@ -150,7 +150,7 @@ newHelp(int x, int y, int width, int height,
 
 		    if (pg[++ix] == bctLABEL) {
 			++ix;
-			if (strncmp(pg+ix, label, llen) == 0
+			if (strncmp((char*)(pg+ix), label, llen) == 0
 				     && pg[ix+llen] == bctID)
 			    break;
 		    }
@@ -196,7 +196,7 @@ static void
 drawHtmlLine(WINDOW *win, Obj *obj, int yp)
 {
     int x;
-    unsigned char *line = obj->item.text.lines[yp];
+    unsigned char *line = (unsigned char*)(obj->item.text.lines[yp]);
     int indent = 0;
     int t;
     short href = -1;
@@ -266,7 +266,7 @@ drawHtmlLine(WINDOW *win, Obj *obj, int yp)
 	    if (*line == 'a')
 		href = -1;
 	    else if (*line == 'A')
-		href = atoi(1+line);
+		href = atoi((char*)(1+line));
 	    while (*line != bctID)
 		++line;
 	}
@@ -458,7 +458,7 @@ extern int _nd_callback(Obj *o);
 static editCode
 editHtmlText(Obj *obj, void *w)
 {
-    register c;
+    register int c;
     int x=0, href;
     int cb_stat;
     int rescan_tags = 0;
@@ -570,7 +570,7 @@ editHtmlText(Obj *obj, void *w)
 static editCode
 editPlainText(Obj* obj, void *w)
 {
-    register c;
+    register int c;
     int touch = 0;
 
     while ((c = ndgetch(w)) != EOF) {

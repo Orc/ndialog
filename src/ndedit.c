@@ -39,6 +39,7 @@ static const char rcsid[] = "$Id$";
 #include <errno.h>
 #include <unistd.h>
 #include <ctype.h>
+#include <string.h>
 
 #include "curse.h"
 #include "ndwin.h"

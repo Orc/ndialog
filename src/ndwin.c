@@ -37,6 +37,7 @@ static const char rcsid[] = "$Id: s.ndwin.c 1.23 00/01/02 08:10:24-00:00 orc $";
  * ndwin: routines to display things on the screen
  */
 #include <errno.h>
+#include <string.h>
 
 #include "curse.h"
 #include "ndwin.h"

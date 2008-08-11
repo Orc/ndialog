@@ -41,7 +41,6 @@ static const char rcsid[] = "$Id$";
 #include "nd_objects.h"
 #include "curse.h"
 #include "dialog.h"
-#include <malloc.h>
 #include <errno.h>
 #include <string.h>
 #include <stdlib.h>
@@ -117,17 +116,19 @@ ndialog_list(char *title, char *prompt,
     int promptwidth = prompt ? strwidth(prompt) : 0;
     char *p;
 
-    if (oklabel)
+    if (oklabel) {
 	if ((p = strchr(oklabel, ':')) != 0)
 	    ok = newOKButton(atoi(oklabel), p+1, 0, 0);
 	else
 	    ok = newOKButton(1, oklabel, 0, 0);
+    }
 
-    if (cancellabel)
+    if (cancellabel) {
 	if ((p = strchr(cancellabel, ':')) != 0)
 	    cancel = newCancelButton(atoi(cancellabel), p+1, 0, 0);
 	else
 	    cancel = newCancelButton(2, cancellabel, 0, 0);
+    }
 
     if ((list = malloc(nrlist * sizeof list[0])) == (ListItem*)0)
 	return -1;

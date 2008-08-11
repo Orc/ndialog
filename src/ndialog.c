@@ -40,6 +40,7 @@ static const char rcsid[] = "$Id$";
  */
 #include "curse.h"
 #include <ndialog.h>
+#include <string.h>
 
 #define NR_ND_COLORS	10
 int nd_colors[NR_ND_COLORS] = { 0, };

@@ -36,7 +36,6 @@ static const char rcsid[] = "$Id: s.ndutil.c 1.27 02/05/24 15:19:05-07:00 root@e
 /*
  * new dialog library: utility functions.
  */
-#include <malloc.h>
 #include <string.h>
 #include <errno.h>
 #include <stdarg.h>

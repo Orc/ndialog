@@ -54,7 +54,7 @@ static const char rcsid[] = "$Id$";
 #include <dialog.h>
 #include "ndwin.h"
 #include <errno.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include <string.h>
 
 

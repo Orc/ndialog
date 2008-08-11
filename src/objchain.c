@@ -36,7 +36,6 @@ static const char rcsid[] = "$Id$";
 /*
  * objchain(): routines that manage object chains.
  */
-#include <malloc.h>
 #include <string.h>
 #include <errno.h>
 #include <stdarg.h>

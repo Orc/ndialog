@@ -33,16 +33,20 @@ check_ncurses() {
 	$__fail 1
     fi
 
-    if LIBS="-lncurses" AC_CHECK_FUNCS start_color WITH_NCURSES; then
+    if LIBS="-lncurses" AC_CHECK_FUNCS start_color; then
+	WITH_NCURSES=1
 	AC_LIBS="$AC_LIBS -lncurses"
 	return 0
-    elif LIBS="-lcurses" AC_CHECK_FUNCS start_color WITH_NCURSES; then
+    elif LIBS="-lcurses" AC_CHECK_FUNCS start_color; then
+	WITH_NCURSES=1
 	AC_LIBS="$AC_LIBS -lcurses"
 	return 0
-    elif LIBS="-lcurses" AC_CHECK_FUNCS initscr WITH_BSD_CURSES; then
+    elif LIBS="-lcurses" AC_CHECK_FUNCS initscr; then
+	WITH_BSD_CURSES=1
 	AC_LIBS="$AC_LIBS -lcurses"
 	return 1	# have a curses lib, but it's not ncurses.
-    elif LIBS="-lcurses -ltermcap" AC_CHECK_FUNCS initscr WITH_BSD_CURSES; then
+    elif LIBS="-lcurses -ltermcap" AC_CHECK_FUNCS initscr; then
+	WITH_BSD_CURSES=1
 	AC_LIBS="$AC_LIBS -lcurses -ltermcap"
 	return 1	# have a curses lib, but it's not ncurses.
     fi
@@ -54,10 +58,12 @@ check_curses() {
     if AC_CHECK_HEADERS curses.h; then
 	AC_SUB CURSES_HEADER curses.h
 	# possibly.  
-	if LIBS="-lcurses" AC_CHECK_FUNCS initscr WITH_BSD_CURSES; then
+	if LIBS="-lcurses" AC_CHECK_FUNCS initscr; then
+	    WITH_BSD_CURSES=1
 	    AC_LIBS="$AC_LIBS -lcurses"
 	    return 0
-	elif LIBS="-lcurses -ltermcap" AC_CHECK_FUNCS initscr WITH_BSD_CURSES; then
+	elif LIBS="-lcurses -ltermcap" AC_CHECK_FUNCS initscr; then
+	    WITH_BSD_CURSES=1
 	    AC_LIBS="$AC_LIBS -lcurses -ltermcap"
 	    return 0
 	fi
@@ -78,10 +84,12 @@ elif check_ncurses; then
 	check_panel=T
     fi
     if [ "$check_panel" ]; then
-	if LIBS="-lpanel $AC_LIBS" AC_CHECK_FUNCS new_panel HAVE_PANEL; then
+	if LIBS="-lpanel $AC_LIBS" AC_CHECK_FUNCS new_panel; then
+	    HAVE_PANEL=1
 	    AC_LIBS="-lpanel $AC_LIBS"
 	    AC_SUB PANEL_HEADER $panel_header
-	elif LIBS="$AC_LIBS -lpanel" AC_CHECK_FUNCS new_panel HAVE_PANEL; then
+	elif LIBS="$AC_LIBS -lpanel" AC_CHECK_FUNCS new_panel; then
+	    HAVE_PANEL=1
 	    AC_LIBS="$AC_LIBS -lpanel"
 	    AC_SUB PANEL_HEADER $panel_header
 	fi
@@ -89,6 +97,9 @@ elif check_ncurses; then
 fi
 AC_CHECK_HEADERS errno.h
 test "$WITH_GETCAP" && AC_DEFINE WITH_GETCAP $WITH_GETCAP
+AC_DEFINE WITH_NCURSES ${WITH_NCURSES:-0}
+AC_DEFINE WITH_BSD_CURSES ${WITH_BSD_CURSES:-0}
+AC_DEFINE HAVE_PANEL ${HAVE_PANEL:-0}
 
 if [ ! "$WITH_BSD_CURSES" ]; then
     # check for particular ncurses functions so we can dummy them

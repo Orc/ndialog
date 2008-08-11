@@ -36,7 +36,7 @@ static const char rcsid[] = "$Id$";
 /*
  * new dialog library: object primitives.
  */
-#include <malloc.h>
+#include <unistd.h>
 #include <string.h>
 #include <errno.h>
 #include <stdarg.h>

@@ -182,8 +182,8 @@ unscan(int text, FILE *f)
 int
 scan(FILE *f)
 {
-    register c;
-    register st = wwWORD;
+    register int c;
+    register int st = wwWORD;
     int x = 0;
     int did_escape = 0;
     static int brace_level=0;
