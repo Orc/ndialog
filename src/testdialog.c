@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-static unsigned char *choices[] = {
+static char *choices[] = {
     "menu", "dialog_menu",
     "check", "dialog_checklist",
     "radio", "dialog_radiolist",
@@ -16,7 +16,7 @@ static unsigned char *choices[] = {
 };
 #define NRCHOICES	(sizeof choices / sizeof choices[0])/2
 
-static unsigned char *menu[] = {
+static char *menu[] = {
     "AA", "Choice A",
     "BB", "Choice B",
     "CC", "Choice C",
@@ -26,7 +26,7 @@ static unsigned char *menu[] = {
     "GG", "Choice G", 
 };
 
-static unsigned char *checklist[] = {
+static char *checklist[] = {
     "AA", "Choice A",  "off",
     "BB", "Choice B",  "on",
     "CC", "Choice C",  "off",

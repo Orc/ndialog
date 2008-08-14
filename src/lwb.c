@@ -4,6 +4,8 @@
 #include <dialog.h>
 #include <unistd.h>
 
+#include "ndwin.h"
+
 void
 main(int argc, char **argv)
 {

@@ -39,58 +39,58 @@
 #define DIALOG_COMPAT
 
 #ifndef DIALOG_CHAR
-#define DIALOG_CHAR unsigned char
+#define DIALOG_CHAR char
 #endif
 
 void draw_box(void *win, int y, int x, int height, int width,
                                 int box, int border);
 int line_edit(void* dialog, int y, int x, int flen, int width,
-                                int attrs, int first, DIALOG_CHAR *result);
+                                int attrs, int first, char *result);
 
 int strwidth(const char *str);				/* from ndialog */
 int strdepth(const char *str);				/* from ndialog */
 #define	strheight	strdepth
 
-void dialog_create_rc(DIALOG_CHAR *filename);
+void dialog_create_rc(char *filename);
 
-int dialog_yesno(DIALOG_CHAR *title, DIALOG_CHAR *prompt,
+int dialog_yesno(char *title, char *prompt,
 				    int height, int width);
 							/* IMPLEMENTED */
 #define dialog_yesno_extended ndialog_yesno
 
-int dialog_prgbox(DIALOG_CHAR *title, const DIALOG_CHAR *line,
+int dialog_prgbox(char *title, const char *line,
 				    int height, int width,
 				    int pause, int use_shell);
 
-int dialog_msgbox(DIALOG_CHAR *title, DIALOG_CHAR *prompt,
+int dialog_msgbox(char *title, char *prompt,
 				    int height, int width,
 				    int pause);		/* IMPLEMENTED */
 
-int dialog_textbox(DIALOG_CHAR *title, DIALOG_CHAR *file,
+int dialog_textbox(char *title, char *file,
 				    int height, int width);
-int dialog_menu(DIALOG_CHAR *title, DIALOG_CHAR *prompt,
+int dialog_menu(char *title, char *prompt,
 				    int height, int width,
 				    int menu_height, int item_no,
-				    DIALOG_CHAR **items,
-				    DIALOG_CHAR *result,
+				    char **items,
+				    char *result,
 				    int *ch, int *sc);	/* IMPLEMENTED */
-int dialog_checklist(DIALOG_CHAR *title, DIALOG_CHAR *prompt,
+int dialog_checklist(char *title, char *prompt,
 				    int height, int width,
 				    int nritems, int item_no,
-				    DIALOG_CHAR **items,
-				    DIALOG_CHAR *result);
+				    char **items,
+				    char *result);
 							/* IMPLEMENTED */
 
-int dialog_radiolist(DIALOG_CHAR *title, DIALOG_CHAR *prompt,
+int dialog_radiolist(char *title, char *prompt,
 				    int height, int width,
 				    int menu_height, int item_no,
-				    DIALOG_CHAR **items,
-				    DIALOG_CHAR *result);
+				    char **items,
+				    char *result);
 							/* IMPLEMENTED */
 
-int dialog_inputbox(DIALOG_CHAR *title, DIALOG_CHAR *prompt,
+int dialog_inputbox(char *title, char *prompt,
                                         int height, int width,
-					DIALOG_CHAR *result);
+					char *result);
 							/* IMPLEMENTED */
 
 void dialog_clear_norefresh(void);			/* IMPLEMENTED */
@@ -102,7 +102,7 @@ void end_dialog(void);					/* IMPLEMENTED */
 char *dialog_fselect(char *dir, char *fmask);
 int  dialog_dselect(char *dir, char *fmask);
 void dialog_notify(char *msg);				/* IMPLEMENTED */
-int  dialog_mesgbox(DIALOG_CHAR *title, DIALOG_CHAR *prompt,
+int  dialog_mesgbox(char *title, char *prompt,
                                           int height, int width);
 							/* IMPLEMENTED */
 void use_helpfile(char *helpfile);			/* IMPLEMENTED */

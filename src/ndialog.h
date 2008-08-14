@@ -39,7 +39,7 @@
 #define NDIALOG_D 1
 
 #ifndef DIALOG_CHAR
-#define DIALOG_CHAR	unsigned char
+#define DIALOG_CHAR	char
 #endif
 
 /*
@@ -208,7 +208,7 @@ void deleteObjChain(ndObject);		/* delete all the objects in a chain */
 
 /*  libdialog compatability glue.
  */
-int ndialog_yesno(DIALOG_CHAR*,DIALOG_CHAR*,int,int,char*,char*);
+int ndialog_yesno(char*,char*,int,int,char*,char*);
 
 enum dialog_list_mode {ND_A_MENU,ND_A_LIST,ND_A_RADIOLIST};
 int ndialog_list(char*,char*,int,int,int,int,char**,

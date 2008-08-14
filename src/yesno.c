@@ -52,7 +52,7 @@ static const char rcsid[] = "$Id$";
  * YES or NO.
  */
 int
-dialog_yesno(DIALOG_CHAR *title, DIALOG_CHAR *prompt, int height, int width)
+dialog_yesno(char *title, char *prompt, int height, int width)
 {
     return ndialog_yesno(title, prompt, height, width, "1:YES", "2:NO");
 } /* dialog_yesno */
@@ -66,7 +66,7 @@ dialog_yesno(DIALOG_CHAR *title, DIALOG_CHAR *prompt, int height, int width)
  * messagebox.
  */
 int
-ndialog_yesno(DIALOG_CHAR *title, DIALOG_CHAR *prompt,
+ndialog_yesno(char *title, char *prompt,
               int height, int width,
 	      char *okbutton, char *cancelbutton)
 {

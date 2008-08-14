@@ -637,18 +637,22 @@ editObj(void *obj, void *win, void *event, editCode cc)
  *     O B J E C T   R E G I S T R A T I O N     *
  *                                               *
  *-----------------------------------------------*/
+    
+#define REGISTER(edit,draw,free,bind,size,getp,setp) \
+	{ 1, (nd_edit)edit, (nd_draw)draw, (nd_free)free, \
+	     (nd_bind)bind, (nd_size)size, (nd_getp)getp, (nd_setp)setp }
 
 struct _nd_object_table nd_object_table[ND_TABLE_SIZE] = {
     { 1,  },
-    { 1, editString, drawString, 0,         nd_bindToString, nd_typeSize,
-					    getStringCursor, setStringCursor },
-    { 1, editCheck,  drawCheck,  0,         nd_bindToType,   nd_typeSize,  },
-    { 1, editButton, drawButton, 0,         nd_bindToType,   nd_buttonSize },
-    { 1, editList,   drawList,   0,         nd_bindToList,   nd_typeSize,
-					    getListCursor,   setListCursor },
-    { 1, editText,   drawText,   freeText,  nd_bindToText,   nd_typeSize,
-					    0,               setTextCursor },
-    { 1, 0,          drawGauge,  0,         nd_bindToType,   nd_typeSize   },
+    REGISTER(editString, drawString, 0, nd_bindToString, nd_typeSize,
+				getStringCursor, setStringCursor),
+    REGISTER(editCheck, drawCheck, 0, nd_bindToType, nd_typeSize, 0, 0),
+    REGISTER(editButton,drawButton, 0, nd_bindToType, nd_buttonSize, 0, 0),
+    REGISTER(editList, drawList, 0, nd_bindToList, nd_typeSize,
+				getListCursor, setListCursor),
+    REGISTER(editText, drawText, freeText, nd_bindToText, nd_typeSize,
+				 0, setTextCursor),
+    REGISTER(0, drawGauge, 0, nd_bindToType, nd_typeSize, 0, 0),
 } ;
 
 

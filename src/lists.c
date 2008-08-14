@@ -153,7 +153,7 @@ ndialog_list(char *title, char *prompt,
 	    idwidth = tw;
 	if ((tw=strlen(list[x].item)) > itemwidth)
 	    itemwidth = tw;
-	list[x].help = (char*)0;
+	list[x].help = 0;
     }
     if ((mode == ND_A_RADIOLIST) && (nr_selected != 1)) {
 	/* oops.  Radio lists can only have one item selected */
@@ -240,16 +240,16 @@ byebye:
  * button.
  */
 int
-dialog_menu(DIALOG_CHAR *title, DIALOG_CHAR *prompt,
+dialog_menu(char *title, char *prompt,
             int height, int width,
 	    int menu_height, int nrmenu,
-	    DIALOG_CHAR **menu, /* duples; KEY, then ITEM */
-	    DIALOG_CHAR *result,
+	    char **menu, /* duples; KEY, then ITEM */
+	    char *result,
 	    int *ch, int *sc)
 {
-    return ndialog_list((char*)title,(char*)prompt,height,width,
+    return ndialog_list(title,prompt,height,width,
 			menu_height,nrmenu,(char**)menu,
-			(char*)result,ch,sc,
+			result,ch,sc,
 			ND_A_MENU,0,"1:CANCEL");
 } /* dialog_menu */
 
@@ -258,16 +258,16 @@ dialog_menu(DIALOG_CHAR *title, DIALOG_CHAR *prompt,
  * dialog_checklist() displays a checklist menu.
  */
 int
-dialog_checklist(DIALOG_CHAR *title, DIALOG_CHAR *prompt,
+dialog_checklist(char *title, char *prompt,
 		    int height, int width, int menu_height, int nrmenu,
-		    DIALOG_CHAR **menu, /* triples: ID, then ITEM, then ON */
-		    DIALOG_CHAR *result)
+		    char **menu, /* triples: ID, then ITEM, then ON */
+		    char *result)
 {
     int ch=0, sc=0;
 
-    return ndialog_list((char*)title,(char*)prompt,height,width,
+    return ndialog_list(title,prompt,height,width,
 			menu_height,nrmenu,(char**)menu,
-			(char*)result,&ch,&sc,
+			result,&ch,&sc,
 			ND_A_LIST,"1:  OK  ","2:CANCEL");
 } /* dialog_checklist */
 
@@ -276,15 +276,15 @@ dialog_checklist(DIALOG_CHAR *title, DIALOG_CHAR *prompt,
  * dialog_radiolist() displays a radio button list.
  */
 int
-dialog_radiolist(DIALOG_CHAR *title, DIALOG_CHAR *prompt,
+dialog_radiolist(char *title, char *prompt,
 		    int height, int width, int menu_height, int nrmenu,
-		    DIALOG_CHAR **menu, /* triples: ID, then ITEM, then ON */
-		    DIALOG_CHAR *result)
+		    char **menu, /* triples: ID, then ITEM, then ON */
+		    char *result)
 {
     int ch=0, sc=0;
 
-    return ndialog_list((char*)title,(char*)prompt,height,width,
+    return ndialog_list(title,prompt,height,width,
 			menu_height,nrmenu,(char**)menu,
-			(char*)result,&ch,&sc,
+			result,&ch,&sc,
 			ND_A_RADIOLIST,"1:  OK  ","2:CANCEL");
 } /* dialog_checklist */

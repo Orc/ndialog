@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "curse.h"
 
+void
 main()
 {
 #if VERMIN

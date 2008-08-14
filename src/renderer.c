@@ -285,7 +285,7 @@ static void
 addstring(unsigned char *s)
 {
     while (*s) {
-	if (*s == bcfID || *s == DLE || *s == bctID)
+	if ( (*s == bcfID) || (*s == DLE) || (*s == bctID) )
 	    addchar(*s);
 	if (*s == '\n')
 	    ++s;
@@ -336,7 +336,7 @@ addword(char *word)
 
     switch (state.doing) {
     case D_PRE:
-	addstring(word);
+	addstring((unsigned char*)word);
 	break;
     case D_TITLE:
 	state.page->titlelen += siz;
@@ -352,7 +352,7 @@ addword(char *word)
 	}
 	linestart();
 
-	addstring(word);
+	addstring((unsigned char*)word);
 	XP += siz;
 	break;
     }

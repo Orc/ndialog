@@ -6,6 +6,7 @@
  */
 #include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 #include "html.h"
 #include "bytecodes.h"
@@ -16,7 +17,7 @@
 void
 display(Page *p)
 {
-    register i;
+    register int i;
 
     if (p->title && p->titlelen > 0)
 	printf("TITLE: %s\n", p->title);
@@ -38,7 +39,7 @@ display(Page *p)
 		break;
 	case DLE:
 		++i;
-		if (i < p->pagelen)
+		if (i < p->pagelen) {
 		    if (p->page[i] == DLE)
 			putchar(DLE);
 		    else {
@@ -47,6 +48,7 @@ display(Page *p)
 			if (indent > 0 && indent <= 96)
 			    printf("%*.*s", indent, indent, "");
 		    }
+		}
 		break;
 	default:
 		putchar(p->page[i]);

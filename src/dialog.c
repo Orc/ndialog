@@ -62,7 +62,7 @@ dialog_notify(char* message)
  * DIFFERENCES FROM DIALOG:  You cannot scroll the message.
  */
 int
-dialog_mesgbox(DIALOG_CHAR *title, DIALOG_CHAR *mesg, int h, int w)
+dialog_mesgbox(char *title, char *mesg, int h, int w)
 {
     void *chain = ObjChain(0, newOKButton(0, "  OK  ", 0, 0));
     int rc;
@@ -80,7 +80,7 @@ dialog_mesgbox(DIALOG_CHAR *title, DIALOG_CHAR *mesg, int h, int w)
  * user to press [return] before continuing.
  */
 int
-dialog_msgbox(DIALOG_CHAR *title, DIALOG_CHAR *msg, int h, int w, int wait)
+dialog_msgbox(char *title, char *msg, int h, int w, int wait)
 {
     int rc;
     if (wait)
@@ -153,7 +153,7 @@ dialog_gauge(char *title, char *prompt, int y, int x,
  * dialog_inputbox() spits up a box that asks for string input
  */
 int
-dialog_inputbox(DIALOG_CHAR *title, DIALOG_CHAR *prompt, int height, int width, DIALOG_CHAR* result)
+dialog_inputbox(char *title, char *prompt, int height, int width, char* result)
 {
     void *chain;
     int strwidth = (width < 0) ? (COLS-4) : width-4;

@@ -129,9 +129,9 @@ newIndexedMenu(int x, int y, int width, int depth, int indexwidth, LIA list,
 
 #if DYNAMIC_BINDING
     if (W_IMENU == O_ERROR) {
-	static struct _nd_object_table t = { 0, editIndexedMenu,
-						drawIndexedMenu,
-						deleteIndexedMenu,
+	static struct _nd_object_table t = { 0, (nd_edit)editIndexedMenu,
+						(nd_draw)drawIndexedMenu,
+						(nd_free)deleteIndexedMenu,
 						0, 0, 0, 0} ;
 	W_IMENU = nd_register_objtab(sizeof t, &t);
     }

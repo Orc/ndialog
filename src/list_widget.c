@@ -132,9 +132,9 @@ newEditableList(int x, int y, int width, int depth, LIA list,
 
 #if DYNAMIC_BINDING
     if (W_LIST == O_ERROR) {
-	static struct _nd_object_table t = { 0,  editListWidget,
-						 drawListWidget,
-						 deleteListWidget,
+	static struct _nd_object_table t = { 0,  (nd_edit)editListWidget,
+						 (nd_draw)drawListWidget,
+						 (nd_free)deleteListWidget,
 						 0, 0, 0, 0 };
 	W_LIST = nd_register_objtab(sizeof t, &t);
     }

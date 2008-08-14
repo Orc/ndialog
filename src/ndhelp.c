@@ -116,7 +116,7 @@ _nd_help(char *document)
 
     do {
 	help = newHelp(0, 0, (COLS*3)/4, LINES-10,
-		       stack[nrhelp].file, ndhcallback, 0);
+		       stack[nrhelp].file, (pfo)ndhcallback, 0);
 
 	if (stack[nrhelp].cursor)
 	    setHelpCursor(help, stack[nrhelp].cursor);
