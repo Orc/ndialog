@@ -602,6 +602,15 @@ MENU(void *chain, int width, int depth, char *title, char *prompt, int flags)
     noecho();
     leaveok(menu, FALSE);
 
+#if NCURSES_VERSION_MAJOR >= 5
+    /* ncurses 5 appears to not update the screen
+     * if you do waddch(menu, ' ') unless you 
+     * follow it up by something else.   ncurses
+     * is broken.   So what else is new?
+     */
+    wclear(menu);
+#endif
+
 #if VERMIN
     mousemask(BUTTON1_PRESSED|BUTTON1_CLICKED|BUTTON1_DOUBLE_CLICKED, &mev);
 #endif

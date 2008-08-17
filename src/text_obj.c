@@ -215,7 +215,6 @@ drawHtmlLine(WINDOW *win, Obj *obj, int yp)
 	if (t > obj->width)
 	    /* indent fills the entire line */
 	    return;
-
 	while (t > 0) {
 	    waddch(win, ' ');
 	    t--;
@@ -450,8 +449,6 @@ scan_for_tag(Obj *obj, int direction)
 #define TOPY		(obj->item.text.topy)
 #define NRLINES		(obj->item.text.nrlines)
 
-extern int _nd_callback(Obj *o);
-
 /*
  * editHtmlText() is a local function that handles navigation on a html page
  */
@@ -481,7 +478,7 @@ editHtmlText(Obj *obj, void *w)
 			if (x < 0 || href < 0)	/* can't get away if */
 			    continue;	/* the tag isn't on this page */
 
-			if ((cb_stat = _nd_callback(obj)) == 0)
+			if ((cb_stat = _nd_callback(obj, w)) == 0)
 			    continue;
 			if (cb_stat != 0)
 			    return (cb_stat < 0) ? eEXITFORM : eRETURN;
@@ -712,7 +709,7 @@ editText(void* o, void* w, MEVENT* ev, editCode cc)
 		obj->item.text.href = obj->item.text.bs[xp + (yp*obj->width)];
 
 		if (ev->bstate & BUTTON1_DOUBLE_CLICKED)
-		    if ((cb_stat = _nd_callback(obj)) != 0)
+		    if ((cb_stat = _nd_callback(obj, w)) != 0)
 			return (cb_stat < 0) ? eEXITFORM : eRETURN;
 	    }
 	}

@@ -47,6 +47,7 @@ static const char rcsid[] = "$Id$";
 #include "curse.h"
 #include "nd_objects.h"
 #include "ndialog.h"
+#include "cstring.h"
 
 
 /*
@@ -57,7 +58,7 @@ static const char rcsid[] = "$Id$";
 typedef struct {
     char *file;
     void *cursor;
-} HelpStackItem;
+} Page;
 
 static char *root = 0;		/* root for helpfiles, set by setHelpRoot(). */
 
@@ -84,96 +85,103 @@ ndhcallback(void *o)
 } /* ndhcallback */
 
 
+static char *
+helpfile(char *doc, char *prev)
+{
+    char *ret, *q;
+    
+    if ( *doc == '/' ) {
+	ret = calloc ( 1, (root ? strlen(root) : 0) + 2 + strlen(doc) );
+
+	if ( root ) strcpy(ret, root);
+
+	strcat(ret, doc);
+	return ret;
+    }
+    else if ( prev ) {
+	ret = malloc(strlen(prev) + strlen(doc) + 2 );
+	strcpy(ret, prev);
+	if ( *doc == '#' ) {
+	    if  ( q = strrchr(ret, '#') )
+		*q = 0;
+	}
+	else if ( q = strrchr(ret, '/') )
+	    *++q = 0;
+	else if ( q = strchr(ret, '#') )
+	    *q = 0;
+
+	strcat(ret, doc);
+	return ret;
+    }
+    else
+	return strdup(doc);
+}
+
+
 /*
  * _nd_help() displays helpfiles
  */
 void
 _nd_help(char *document)
 {
-    HelpStackItem *stack;	/* stack is a stack of previously visited */
-    int nrhelp = 0;		/* help topics, so we can rewind with ESC */
+    STRING(Page) pages;
+    Page *cur, *up = 0;
     int rc;
     void *help, *chain;
-    char *p;
     char *topic;		/* help topic title, for putting on the
 				 * help box titlebar*/
 
     if (document == 0)
 	return;
 
-    stack = malloc(sizeof stack[0]);
-    if (stack == 0) {
-	Error("malloc");
-	return;
-    }
-    stack[0].cursor = 0;
-    if (document[0] != '/') {
-	stack[0].file = malloc((root?strlen(root):0) +2+ strlen(document));
-	sprintf(stack[0].file, "%s/%s", root ? root : "", document);
-    }
-    else
-	stack[0].file = strdup(document);
+    CREATE(pages);
+
+    cur = &EXPAND(pages);
+    
+    cur->cursor = 0;
+    cur->file = helpfile(document, root);
 
     do {
 	help = newHelp(0, 0, (COLS*3)/4, LINES-10,
-		       stack[nrhelp].file, (pfo)ndhcallback, 0);
+		       cur->file, (pfo)ndhcallback, 0);
 
-	if (stack[nrhelp].cursor)
-	    setHelpCursor(help, stack[nrhelp].cursor);
+	/*setObjTitle(help, cur->file);*/
+
+	if (cur->cursor)
+	    setHelpCursor(help, cur->cursor);
 
 	chain = ObjChain(help, newCancelButton(0,"Done", 0, 0));
 
 	rc = MENU(chain, -1, -1, getHelpTopic(help), 0, 0);
 
 	if (rc == MENU_OK) {
-	    if ((topic = currentHtmlTag(help)) != (char*)0) {
-		stack[nrhelp].cursor = getHelpCursor(help);
-		++nrhelp;
-		stack = realloc(stack, (1+nrhelp)*sizeof stack[0]);
+	    if ( topic = currentHtmlTag(help) ) {
+		cur->cursor = getHelpCursor(help);
 
-		stack[nrhelp].cursor = 0;
-		if (topic[0] == '#') {
-		    stack[nrhelp].file = malloc(strlen(stack[nrhelp-1].file) + 2 + strlen(topic));
-
-		    strcpy(stack[nrhelp].file, stack[nrhelp-1].file);
-		    if ((p = strchr(stack[nrhelp].file, '#')) != 0)
-			*p = 0;
-		    strcat(stack[nrhelp].file, topic);
-		}
-		else if (topic[0] != '/' && (p = strrchr(stack[nrhelp-1].file, '/')) != 0) {
-		    ++p;
-		    stack[nrhelp].file = malloc(strlen(stack[nrhelp-1].file)
-						       + 2 + strlen(topic));
-		    memcpy(stack[nrhelp].file,
-			   stack[nrhelp-1].file,
-			   (int)(p - stack[nrhelp-1].file));
-		    stack[nrhelp].file[p-stack[nrhelp-1].file] = 0;
-		    strcat(stack[nrhelp].file, topic);
-		}
-		else
-		    stack[nrhelp].file = strdup(topic);
+		up = cur;
+		cur = &EXPAND(pages);
+		cur->cursor = 0;
+		cur->file = helpfile(topic, up ? up->file : root);
 	    }
 	}
 	else if (rc == MENU_ESCAPE) {
-	    if (nrhelp >= 0) {
-		free(stack[nrhelp].cursor);
-		free(stack[nrhelp].file);
-		--nrhelp;
-	    }
+	    free(cur->file);
+	    S(pages)--;
+	    up = (S(pages) > 1) ? &T(pages)[S(pages)-2]:0;
+	    cur = &T(pages)[S(pages)-1];
 	}
 	else if (rc == MENU_CANCEL) {
-	    while (nrhelp >= 0) {
-		free(stack[nrhelp].cursor);
-		free(stack[nrhelp].file);
-		--nrhelp;
-	    }
+	    int i;
+	    for (i = 0; i < S(pages); i++)
+		free(T(pages)[i].file);
 	}
 	deleteObjChain(chain);
-    } while (nrhelp >= 0);
-    free(stack);
+    } while ( S(pages) > 0 );
+    DELETE(pages);
 #if HAVE_DOUPDATE
     doupdate();
 #else
     refresh();
 #endif
 } /* _nd_help */
+

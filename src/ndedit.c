@@ -61,7 +61,7 @@ static const char rcsid[] = "$Id$";
  *	>0 -- callback succeeded, you may proceed.
  *	<0 -- callback succeeded, please exit the form now.
  */
-inline int
+int
 _nd_callback(Obj *obj, void* win)
 {
     int rc;

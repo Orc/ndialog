@@ -267,6 +267,8 @@ extern Obj * _nd_newObj(pfo, enum Class, void*,
                         char*, char*,
 			int, int, int, int, char*);
 
+extern int _nd_callback(Obj *, void*);
+
 /*
  * A _nd_display is an object containing the necessary information for
  * writing something to the screen.  For curses, it contains a window and
