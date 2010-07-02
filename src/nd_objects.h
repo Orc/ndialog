@@ -314,7 +314,7 @@ extern int ndgetch(Display* from);
 typedef editCode (*nd_edit)(void*,void*,void*,editCode);
 typedef void     (*nd_draw)(void*,void*);
 typedef void     (*nd_free)(void*);
-typedef va_list  (*nd_bind)(void*, ...);
+typedef va_list  *(*nd_bind)(void*, ...);
 typedef int      (*nd_size)(void*, int, int*, int*);
 typedef int      (*nd_getp)(void*);
 typedef int      (*nd_setp)(void*, int);
@@ -335,10 +335,10 @@ struct _nd_object_table {
 extern int nd_register_object(nd_edit, nd_draw, nd_free, nd_bind, nd_size);
 extern int nd_register_objtab(int size, struct _nd_object_table *);
 
-extern va_list nd_bindToType(void*, va_list);
-extern va_list nd_bindToString(void*, va_list);
-extern va_list nd_bindToList(void*, va_list);
-extern va_list nd_bindToText(void*, va_list);
+extern va_list *nd_bindToType(void*, va_list*);
+extern va_list *nd_bindToString(void*, va_list*);
+extern va_list *nd_bindToList(void*, va_list*);
+extern va_list *nd_bindToText(void*, va_list*);
 
 extern int getListCursor(Obj*);
 extern int setListCursor(Obj*,int);

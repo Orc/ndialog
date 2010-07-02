@@ -159,21 +159,21 @@ newTextData(Obj *o)
  * nd_bindToType() binds something to an object's
  * content pointer.
  */
-va_list
-nd_bindToType(void *obj, va_list ptr)
+va_list*
+nd_bindToType(void *obj, va_list *ptr)
 {
-    OBJ(obj)->content = va_arg(ptr, void*);
+    OBJ(obj)->content = va_arg(*ptr, void*);
     return ptr;
 } /* nd_bindToString */
 
 /*
  * nd_bindToString() binds a string to an O_STRING object
  */
-va_list
-nd_bindToString(void *obj, va_list ptr)
+va_list*
+nd_bindToString(void *obj, va_list *ptr)
 {
     ptr = nd_bindToType(obj, ptr);
-    OBJ(obj)->item.string.maxlen = va_arg(ptr, int);
+    OBJ(obj)->item.string.maxlen = va_arg(*ptr, int);
     OBJ(obj)->item.string.startx = 0;
     OBJ(obj)->item.string.curx   = 0;
     return ptr;
@@ -183,31 +183,37 @@ nd_bindToString(void *obj, va_list ptr)
 /*
  * nd_bindToList() binds a ListItem array to an O_LIST object
  */
-va_list
-nd_bindToList(void *obj, va_list ptr)
+va_list*
+nd_bindToList(void *obj, va_list *ptr)
 {
-    ptr = nd_bindToType(obj, ptr);
-    OBJ(obj)->item.list.items    = va_arg(ptr, ListItem*);
-    OBJ(obj)->item.list.nritems  = va_arg(ptr, int);
-    OBJ(obj)->item.list.topy     = 0;
-    OBJ(obj)->item.list.cury     = 0;
-    return ptr;
+    va_list *ret = nd_bindToType(obj, ptr);
+
+    if ( ret ) {
+	OBJ(obj)->item.list.items    = va_arg(*ret, ListItem*);
+	OBJ(obj)->item.list.nritems  = va_arg(*ret, int);
+	OBJ(obj)->item.list.topy     = 0;
+	OBJ(obj)->item.list.cury     = 0;
+    }
+    return ret;
 } /* nd_bindToList */
 
 
 /*
  * nd_bindToText() binds new text to an O_TEXT object
  */
-va_list
-nd_bindToText(void *obj, va_list ptr)
+va_list*
+nd_bindToText(void *obj, va_list *ptr)
 {
-    ptr = nd_bindToType(obj, ptr);
-    if (OBJ(obj)->item.text.lines)
-	free(OBJ(obj)->item.text.lines);
-    newTextData(obj);
-    OBJ(obj)->item.text.topy   = 0;
-    OBJ(obj)->item.text.off_x  = 0;
-    return ptr;
+    va_list *ret = nd_bindToType(obj,ptr);
+
+    if ( ret ) {
+	if (OBJ(obj)->item.text.lines)
+	    free(OBJ(obj)->item.text.lines);
+	newTextData(obj);
+	OBJ(obj)->item.text.topy   = 0;
+	OBJ(obj)->item.text.off_x  = 0;
+    }
+    return ret;
 } /* nd_bindToText */
 #endif
 
