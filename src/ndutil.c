@@ -233,7 +233,7 @@ setObjData(void *obj,...)
     va_start(ptr, obj);
 #if DYNAMIC_BINDING
     if (nd_object_table[OBJ(obj)->Class].bind)
-	(nd_object_table[OBJ(obj)->Class].bind)(obj, ptr);
+	(nd_object_table[OBJ(obj)->Class].bind)(obj, &ptr);
 #else
     OBJ(obj)->content = va_arg(ptr, void*);
     switch (OBJ(obj)->Class) {

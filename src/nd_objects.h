@@ -314,7 +314,7 @@ extern int ndgetch(Display* from);
 typedef editCode (*nd_edit)(void*,void*,void*,editCode);
 typedef void     (*nd_draw)(void*,void*);
 typedef void     (*nd_free)(void*);
-typedef va_list  *(*nd_bind)(void*, ...);
+typedef va_list  *(*nd_bind)(void*, va_list*);
 typedef int      (*nd_size)(void*, int, int*, int*);
 typedef int      (*nd_getp)(void*);
 typedef int      (*nd_setp)(void*, int);
