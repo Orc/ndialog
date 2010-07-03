@@ -14,6 +14,8 @@
 #include <dialog.h>
 #include <ndialog.h>
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -21,7 +23,6 @@
 #include <errno.h>
 #include <regex.h>
 #include <string.h>
-#include <malloc.h>
 
 /*
  * the selector is a pseudo-widget that fileselector() uses to keep
@@ -31,7 +32,6 @@ static struct {
     char *curdir;		/* current directory */
     int szcurdir;
     char *pattern;		/* pattern to match files against */
-    int szpattern;
     LIA directories;		/* directories in current dir (incl ..) */
     LIA files;			/* files in current dir */
     ndObject selection;		/* point at the selection object */
@@ -59,7 +59,7 @@ populateSelector(ndDisplay display)
     selector.directories = newLIA(0,0);
     selector.files = newLIA(0,0);
 
-    if (selector.szpattern)
+    if (selector.pattern)
 	regcomp(&re, selector.pattern, REG_NOSUB);
 
 
@@ -74,7 +74,7 @@ populateSelector(ndDisplay display)
 		continue;
 	    if (S_ISDIR(st.st_mode))
 		addToLIA(selector.directories, 0, de->d_name, 0);
-	    else if (selector.szpattern == 0 || regexec(&re, de->d_name, 0, 0, 0) == 0)
+	    else if (selector.pattern == 0 || regexec(&re, de->d_name, 0, 0, 0) == 0)
 		addToLIA(selector.files, 0, de->d_name, 0);
 	}
 	closedir(dir);
@@ -239,7 +239,6 @@ fileselector(int width, int depth, char *title, char *pattern, char *dir)
 	    *p++ = *pattern++;
     }
     *p = 0;
-    selector.szpattern = p - selector.pattern;
 
     selector.szcurdir = 1024;
     selector.curdir = strdup(dir);
@@ -247,6 +246,7 @@ fileselector(int width, int depth, char *title, char *pattern, char *dir)
 
     populateSelector(0);
 
+    
     rc = MENU(chain,-1,-1,title ? title : "File selector",0,0);
 
     deleteObjChain(chain);
@@ -270,6 +270,7 @@ fileselector(int width, int depth, char *title, char *pattern, char *dir)
 
 
 #ifdef TEST
+int
 main()
 {
     char *res;
@@ -282,5 +283,6 @@ main()
 
     if (res)
 	puts(res);
+    exit(0);
 }
 #endif
