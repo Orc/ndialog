@@ -32,7 +32,7 @@ $(NDIALOG): $(OBJS)
 	$(AR) cr $(NDIALOG) $(OBJS)
 	@RANLIB@ $(NDIALOG)
 
-test:	testhtml testprog testobj mt testdialog testhtml lwb #withdialog
+test:	fs testhtml testprog testobj mt testdialog testhtml lwb #withdialog
 
 spotless: clean
 	rm -fr obj shared debug nd.tar.gz
@@ -62,6 +62,9 @@ testdialog: testdialog.c $(NDIALOG)
 
 testhtml: testhtml.c $(NDIALOG)
 	$(CC) $(CFLAGS) $(LFLAGS) -o testhtml testhtml.c $(NDIALOG) @LIBS@
+
+fs: fileselector.c $(NDIALOG)
+	$(CC) $(CFLAGS) $(LFLAGS) -DTEST -o fs fileselector.c $(NDIALOG) @LIBS@
 
 install: all
 	-mkdir $(LIBDIR)
