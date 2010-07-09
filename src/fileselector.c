@@ -53,6 +53,7 @@ populateSelector(ndDisplay display)
     struct stat st;
     regex_t re;
     char *tmp;
+    int rc;
 
     deleteLIA(selector.directories);
     deleteLIA(selector.files);
@@ -62,26 +63,28 @@ populateSelector(ndDisplay display)
     if (selector.pattern)
 	regcomp(&re, selector.pattern, REG_NOSUB);
 
-
-    tmp = malloc(strlen(selector.curdir)+1024);
-
     if ((dir = opendir(selector.curdir[0] ? selector.curdir : "/")) != 0) {
 	for (de = readdir(dir); de; de = readdir(dir)) {
 	    if (de->d_name[0] == '.' && !de->d_name[1])
 		continue;
-	    sprintf(tmp, "%s/%.1024s", selector.curdir, de->d_name);
-	    if (stat(tmp, &st) != 0)
-		continue;
-	    if (S_ISDIR(st.st_mode))
-		addToLIA(selector.directories, 0, de->d_name, 0);
-	    else if (selector.pattern == 0 || regexec(&re, de->d_name, 0, 0, 0) == 0)
-		addToLIA(selector.files, 0, de->d_name, 0);
+	    if ( tmp = malloc(strlen(selector.curdir)+strlen(de->d_name)+9) ) {
+		sprintf(tmp, "%s/%s", selector.curdir, de->d_name);
+		rc = stat(tmp, &st);
+		free(tmp);
+
+		if ( rc != 0 )
+		    continue;
+		
+		if (S_ISDIR(st.st_mode))
+		    addToLIA(selector.directories, 0, de->d_name, 0);
+		else if (selector.pattern == 0 || regexec(&re, de->d_name, 0, 0, 0) == 0)
+		    addToLIA(selector.files, 0, de->d_name, 0);
+	    }
 	}
 	closedir(dir);
     }
     else 
 	addToLIA(selector.directories, 0, "..", 0);/* always allow escape */
-    free(tmp);
     regfree(&re);
     setObjData(selector.dirlist,0L,LIAlist(selector.directories),
 				   LIAcount(selector.directories));
