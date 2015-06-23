@@ -85,4 +85,5 @@ main(int pointy, char **arguments)
 	perror("extractFromObjChain");
 
     deleteObjChain(chain);
+    adump();
 }

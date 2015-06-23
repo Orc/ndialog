@@ -146,4 +146,5 @@ main(int argc, char **argv)
 	    perror("MENU");
     }
     end_dialog();
+    adump();
 }

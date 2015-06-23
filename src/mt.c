@@ -11,7 +11,7 @@ main()
 
     initscr();
     scrollok(stdscr, 1);
-    mousemask(-1, (mmask_t*)0);
+    mousemask(ALL_MOUSE_EVENTS, (mmask_t*)0);
 
     bar = newwin(2,2,2,2);
     scrollok(bar, 1);

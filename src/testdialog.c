@@ -129,5 +129,6 @@ main()
 	}
     }
     end_dialog();
+    adump();
     exit((rc < 0) ? 1 : 0);
 }

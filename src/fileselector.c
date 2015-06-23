@@ -286,6 +286,7 @@ main()
 
     if (res)
 	puts(res);
+    adump();
     exit(0);
 }
 #endif
