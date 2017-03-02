@@ -6,6 +6,7 @@
 # make certain that what you quote is what you want to quote.
 
 ac_help='--with-bsd-curses	Use BSD curses if available.
+--with-amalloc		Use a paranoid memory allocator
 --with-getcap		(--with-bsd-curses) use getcap() to get
 			function key definitions'
 
@@ -113,6 +114,14 @@ if [ ! "$WITH_BSD_CURSES" ]; then
 fi
 LIBS="$AC_LIBS" AC_CHECK_FUNCS doupdate
 LIBS="$AC_LIBS" AC_CHECK_FUNCS keypad
+
+if [ "$WITH_AMALLOC" ]; then
+    AC_SUB AMALLOC amalloc.o
+    AC_INCLUDE 'amalloc.h'
+else
+    AC_SUB AMALLOC ''
+    AC_DEFINE adump 1
+fi
 
 MF_PATH_INCLUDE RANLIB ranlib true || AC_CONFIG RANLIB ':'
 

@@ -19,7 +19,7 @@ INCDIR=@prefix@/include
 
 OBJS=nd_objects.o ndmenu.o ndwin.o ndedit.o ndutil.o dialog.o nderror.o \
      ndialog.o yesno.o objchain.o lists.o html.o renderer.o text_obj.o \
-     ndhelp.o list_widget.o indexed_menu.o keypad.o
+     ndhelp.o list_widget.o indexed_menu.o keypad.o @AMALLOC@
 HEADERS= dialog.h ndialog.h
 HFILES= indexed_menu.h keypad.h
 
@@ -109,4 +109,4 @@ indexed_menu.o: indexed_menu.c nd_objects.h ndialog.h dialog.h curse.h \
 keypad.o:       curse.h ../config.h keypad.h
 testprog.o:     dialog.h ndialog.h ../config.h
 testdialog.o:   dialog.h ../config.h
-
+amalloc.o:      amalloc.h
