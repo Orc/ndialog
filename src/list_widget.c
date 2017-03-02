@@ -33,8 +33,6 @@
  *  THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-static const char rcsid[] = "$Id$";
-
 /*
  * list_widget.c: editable list widget (W_LIST)
  *

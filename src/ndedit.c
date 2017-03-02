@@ -32,7 +32,7 @@
  *  IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  *  THE POSSIBILITY OF SUCH DAMAGE.
  */
-static const char rcsid[] = "$Id$";
+
 /*
  * ndedit: routines to modify things on the screen
  */

@@ -32,7 +32,7 @@
  *  IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  *  THE POSSIBILITY OF SUCH DAMAGE.
  */
-static const char rcsid[] = "$Id: s.ndwin.c 1.23 00/01/02 08:10:24-00:00 orc $";
+
 /*
  * ndwin: routines to display things on the screen
  */

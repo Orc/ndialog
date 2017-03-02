@@ -33,8 +33,6 @@
  *  THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-static const char rcsid[] = "$Id";
-
 /*
  * renderer: code that actually renders a helpfile html page
  */

@@ -33,8 +33,6 @@
  *  THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-static const char rcsid[] = "$Id$";
-
 /*
  * The online help system, accessed (probably) through F1 (or ?, on appropriate
  * objects

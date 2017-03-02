@@ -32,7 +32,7 @@
  *  IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  *  THE POSSIBILITY OF SUCH DAMAGE.
  */
-static const char rcsid[] = "$Id: s.ndutil.c 1.27 02/05/24 15:19:05-07:00 root@egypt.pell.portland.or.us $";
+
 /*
  * new dialog library: utility functions.
  */

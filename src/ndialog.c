@@ -33,8 +33,6 @@
  *  THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-static const char rcsid[] = "$Id$";
-
 /*
  * ndialog: new dialog library
  */

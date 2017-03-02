@@ -33,8 +33,6 @@
  *  THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-static const char rcsid[] = "$Id$";
-
 /*
  * indexed_menu.c: two-level menu widget
  *
@@ -301,7 +299,7 @@ editIndexedMenu(void* o, void* w, MEVENT *mev, editCode cc)
      */
 
     while (1) {
-	int incr;
+	int incr = 0;
 
 	cc = editObj(lists[idx], w, mev, cc);
 

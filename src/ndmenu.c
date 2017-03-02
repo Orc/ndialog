@@ -32,7 +32,7 @@
  *  IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  *  THE POSSIBILITY OF SUCH DAMAGE.
  */
-static const char rcsid[] = "$Id: s.ndmenu.c 1.22 00/05/21 16:33:42-00:00 orc $";
+
 /*
  * nd_menu:  the MENU() function (ncurses function)
  *
