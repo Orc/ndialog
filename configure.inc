@@ -1035,18 +1035,28 @@ AC_OUTPUT () {
 	AC_PROG ranlib
 	AC_SUB LD_LIBRARY_PATH HERE
 
-	__config_files="$__config_files without"
+	__config_files="$__config_files librarian.sh"
 
 cat > s$$.c << EOF
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 int
 main(argc, argv)
 char **argv;
 {
-    int j, i;
+    int j, i, pid;
+    char *ACTION, *LIBRARY, *VERSION;
+    char *libname;
+    char *linkcmd;
+
+    ACTION=strdup(argv[1]);
+    LIBRARY=strdup(argv[2]);
+    VERSION=strdup(argv[3]);
+    libname = malloc(strlen(LIBRARY) + 3);
+    sprintf(libname, "%s.a", LIBRARY);
 
     for (i=0; i<argc; i++)
 	if ( strncmp(argv[i], "-l", 2) == 0 )
@@ -1060,38 +1070,39 @@ char **argv;
     }
     argc = j;
 
-    execv(argv[1], 1+argv);
+    if ( strcmp(ACTION, "make") == 0 ) {
+	argv[1] = "${PROG_AR}";
+	argv[2] = "crv";
+	argv[3] = libname;
+
+	if ( fork() == 0 )
+	    execv(argv[1], 1+argv);
+	wait(&pid);
+	if ( fork() == 0 )
+	    execl("${PROG_RANLIB}", "ranlib", argv[3], 0);
+	wait(&pid);
+	unlink(LIBRARY);
+
+	linkcmd = malloc(strlen("${__dolink}")
+		       + strlen(libname)
+		       + strlen(LIBRARY) + 7);
+	sprintf(linkcmd, "${__dolink} \"%s\" \"%s\"", libname, LIBRARY);
+	system(linkcmd);
+    }
+    else if ( strcmp(ACTION, "files") == 0 ) {
+	printf("%s.a\n", LIBRARY);
+    }
+    else if ( strcmp(ACTION, "install") == 0 ) {
+	execl("$PROG_INSTALL", "-m", "644", libname, argv[4], 0);
+    }
+    return 0;
 }
 EOF
-	$AC_CC -o without s$$.c
+	$AC_CC -o librarian.sh s$$.c
 	rm -f s$$.c
-	test -e without || AC_FAIL "cannot make static library helper"
-	
-	__config_files="$__config_files librarian.sh"
-	cat > librarian.sh << EOF
-#! /bin/sh
-#
-#  Build static libraries, hiding (some) ickiness from the makefile
-
-ACTION=\$1; shift
-LIBRARY=\$1; shift
-VERSION=\$1; shift
-
-case "\$ACTION" in
-make)   \`dirname \$0\`/without ${PROG_AR} crv "\$LIBRARY.a" "\$@"
-	${PROG_RANLIB} "\$LIBRARY.a"
-	rm -f "\$LIBRARY"
-	${__dolink} "\$LIBRARY.a" "\$LIBRARY"
-	;;
-files)  echo "\${LIBRARY}.a"
-	;;
-install)$PROG_INSTALL -m 644 "\${LIBRARY}.a" "\$1"
-	;;
-esac
-EOF
+	test -e librarian.sh || AC_FAIL "cannot make librarian.sh"
     fi
-    chmod +x librarian.sh
-
+	
     if [ -r config.sub ]; then
 	test "$AC_SED_PROG" || AC_PROG_SED
 	test "$AC_SED_PROG" || return 1
