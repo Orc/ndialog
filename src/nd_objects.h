@@ -8,7 +8,7 @@
 #ifndef ND_OBJECTS_D
 #define ND_OBJECTS_D
 
-#include "amalloc.h"
+#include <config.h>
 #include <stdarg.h>			/* for va_list */
 
 typedef int (*pfo)(void*, void*);

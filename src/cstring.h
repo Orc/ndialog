@@ -10,8 +10,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-/*#include "amalloc.h"*/
-
 /* expandable Pascal-style string.
  */
 #define STRING(type)	struct { type *text; int size, alloc; }
