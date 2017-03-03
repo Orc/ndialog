@@ -36,6 +36,7 @@ test:	$(TESTPROGS)
 
 
 distclean spotless clean:  libclean testclean
+	rm -f @SCAFFOLD_FILES@
 
 libclean:
 	rm -f $(NDIALOG) `../librarian.sh files $(NDIALOG) ../VERSION`
@@ -48,22 +49,22 @@ mt: mt.o $(NDIALOG)
 	$(CC) $(LFLAGS) -o mt mt.o $(NDIALOG) @LIBS@
 
 testobj: testobj.c $(NDIALOG)
-	$(CC) $(CFLAGS) $(LFLAGS) -o testobj testobj.c $(NDIALOG) @LIBS@
+	$(CC) $(CFLAGS) $(LFLAGS) -o testobj testobj.c -lndialog @LIBS@
 
 lwb: lwb.c $(NDIALOG)
-	$(CC) $(CFLAGS) $(LFLAGS) -o lwb lwb.c $(NDIALOG) @LIBS@
+	$(CC) $(CFLAGS) $(LFLAGS) -o lwb lwb.c -lndialog @LIBS@
 
 testprog: testprog.c $(NDIALOG)
-	$(CC) $(CFLAGS) $(LFLAGS) -o testprog testprog.c $(NDIALOG) @LIBS@
+	$(CC) $(CFLAGS) $(LFLAGS) -o testprog testprog.c -lndialog @LIBS@
 
 testdialog: testdialog.c $(NDIALOG)
-	$(CC) $(CFLAGS) $(LFLAGS) -o testdialog testdialog.c $(NDIALOG) @LIBS@
+	$(CC) $(CFLAGS) $(LFLAGS) -o testdialog testdialog.c -lndialog @LIBS@
 
 testhtml: testhtml.c $(NDIALOG)
-	$(CC) $(CFLAGS) $(LFLAGS) -o testhtml testhtml.c $(NDIALOG) @LIBS@
+	$(CC) $(CFLAGS) $(LFLAGS) -o testhtml testhtml.c -lndialog @LIBS@
 
 fs: fileselector.c $(NDIALOG)
-	$(CC) $(CFLAGS) $(LFLAGS) -DTEST -o fs fileselector.c $(NDIALOG) @LIBS@
+	$(CC) $(CFLAGS) $(LFLAGS) -DTEST -o fs fileselector.c -lndialog @LIBS@
 
 install: all
 	#-mkdir $(LIBDIR)
