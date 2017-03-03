@@ -22,13 +22,14 @@ and do a make.  This will generate the file libndialog.a, which
 can then be linked with your application (plus -lpanel & -lncurses,
 which are obviously needed)
 
-There are three options that configure.sh accepts
+There are four options that configure.sh accepts
 
     --with-bsd-curses	Use BSD curses in available
     --with-getcap	Use the getcap() function to get
 			function get definitions.
     --with-amalloc	Use my paranoid memory allocator to try and
 			track memory leaks
+    --shared		Try to build shared libraries (only tested on macos)
 
 
 A description of the library interface is in the directory src/doc,
