@@ -1038,16 +1038,17 @@ AC_OUTPUT () {
 	__config_files="$__config_files librarian.sh"
 
 cat > s$$.c << EOF
-#include <unistd.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
 
 int
 main(argc, argv)
 char **argv;
 {
-    int j, i, pid;
+    int j, i, pid, status;
     char *ACTION, *LIBRARY, *VERSION;
     char *libname;
     char *linkcmd;
@@ -1075,12 +1076,26 @@ char **argv;
 	argv[2] = "crv";
 	argv[3] = libname;
 
-	if ( fork() == 0 )
+	if ( (pid=fork()) == 0 )
 	    execv(argv[1], 1+argv);
-	wait(&pid);
-	if ( fork() == 0 )
-	    execl("${PROG_RANLIB}", "ranlib", argv[3], 0);
-	wait(&pid);
+	else if ( pid < 0 ) {
+	    perror(argv[1]);
+	    exit(1);
+	}
+	wait(&status);
+	if ( WIFSIGNALED(status) || WIFSTOPPED(status) || WEXITSTATUS(status) )
+	    exit(1);
+
+	if ( (pid=fork()) == 0 )
+	    execl("${PROG_RANLIB}", "ranlib", libname, 0);
+	else if ( pid < 0 ) {
+	    perror("${PROG_RANLIB}");
+	    exit(1);
+	}
+	wait(&status);
+	if ( WIFSIGNALED(status) || WIFSTOPPED(status) || WEXITSTATUS(status) )
+	    exit(1);
+
 	unlink(LIBRARY);
 	symlink(libname, LIBRARY);
     }
