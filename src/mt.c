@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "curse.h"
 
-void
+int
 main()
 {
 #if VERMIN
@@ -30,4 +30,5 @@ main()
 #else
     puts("VERMIN is not defined -- no mouse support that we know of");
 #endif
+    return 0;
 }

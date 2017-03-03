@@ -29,7 +29,7 @@ menucallback(void *obj, void* display)
 }
 
 
-void
+int
 main(int argc, char **argv)
 {
     void *chain;
@@ -149,4 +149,5 @@ main(int argc, char **argv)
     }
     end_dialog();
     adump();
+    return 0;
 }

@@ -66,7 +66,7 @@ display(Page *p)
 } /* display */
 
 
-void
+int
 main(int argc, char **argv)
 {
     Page *p;

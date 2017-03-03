@@ -38,7 +38,7 @@ static char *checklist[] = {
     "GG", "Choice G",  "off",
 };
 
-void		/* ANSI C can bite me */
+int		/* ANSI C can bite me */
 main()
 {
     int rc;
