@@ -1,0 +1,36 @@
+Ndialog is an attempt to duplicate the functionality of Savio Lam's
+curses-based dialog (repeatedly forked for various applications,
+GPLed fairly early on) without being encumbered with the GPL.   I
+originally wrote it when my attempts to shoehorn new features into
+{whatever version of dialog came with SLS and/or Slackware} collided
+with the existing mass of code.
+
+
+Currently I only implement the library interface because the
+application I was using it for was the Mastodon installer, which
+is a single C program that wraps a UI around the business of
+installing a system.   It would not be difficult to write a shell
+script interface for it, but I just haven't done that.
+
+
+To build, run
+
+   ./configure.sh
+   
+from the toplevel directory, then cd into the src subdirectory
+and do a make.  This will generate the file libndialog.a, which
+can then be linked with your application (plus -lpanel & -lncurses,
+which are obviously needed)
+
+There are three options that configure.sh accepts
+
+    --with-bsd-curses	Use BSD curses in available
+    --with-getcap	Use the getcap() function to get
+			function get definitions.
+    --with-amalloc	Use my paranoid memory allocator to try and
+			track memory leaks
+
+
+A description of the library interface is in the directory src/doc,
+in my helpfile format (which is a subset of html;  opening
+src/doc/index.html with any browser will work)
