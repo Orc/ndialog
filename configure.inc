@@ -1002,10 +1002,11 @@ AC_OUTPUT () {
     
     if test "$__MACOS_DSYM"; then
 	# deal with extra OSX droppings, if they exist
-	AC_SUB 'GENERATED_FILES' "-r *.dSYM $*"
+	AC_SUB 'SCAFFOLD_FILES' "-r *.dSYM"
     else
-	AC_SUB 'GENERATED_FILES' "$*"
+	AC_SUB 'SCAFFOLD_FILES' ''
     fi
+    AC_SUB 'GENERATED_FILES' "$*"
     
     AC_SUB 'CC'      "$AC_CC"
     AC_SUB 'CFLAGS'  "$AC_CFLAGS"
@@ -1034,6 +1035,38 @@ AC_OUTPUT () {
 	AC_PROG ranlib
 	AC_SUB LD_LIBRARY_PATH HERE
 
+	__config_files="$__config_files without"
+
+cat > s$$.c << EOF
+#include <unistd.h>
+#include <stdio.h>
+#include <string.h>
+
+int
+main(argc, argv)
+char **argv;
+{
+    int j, i;
+
+    for (i=0; i<argc; i++)
+	if ( strncmp(argv[i], "-l", 2) == 0 )
+	    argv[i] = 0;
+
+    for (i = j = 0; i < argc; ) {
+	while ( (i < argc) && (argv[i] == 0) )
+	    ++i;
+	if (argv[i])
+	    argv[j++] = argv[i++];
+    }
+    argc = j;
+
+    execv(argv[1], 1+argv);
+}
+EOF
+	$AC_CC -o without s$$.c
+	rm -f s$$.c
+	test -e without || AC_FAIL "cannot make static library helper"
+	
 	__config_files="$__config_files librarian.sh"
 	cat > librarian.sh << EOF
 #! /bin/sh
@@ -1045,7 +1078,7 @@ LIBRARY=\$1; shift
 VERSION=\$1; shift
 
 case "\$ACTION" in
-make)   ${PROG_AR} crv "\$LIBRARY.a" "\$@"
+make)   \`dirname \$0\`/without ${PROG_AR} crv "\$LIBRARY.a" "\$@"
 	${PROG_RANLIB} "\$LIBRARY.a"
 	rm -f "\$LIBRARY"
 	${__dolink} "\$LIBRARY.a" "\$LIBRARY"
