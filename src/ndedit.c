@@ -36,6 +36,8 @@
 /*
  * ndedit: routines to modify things on the screen
  */
+#include <config.h>
+
 #include <errno.h>
 #include <unistd.h>
 #include <ctype.h>
@@ -223,6 +225,7 @@ editString(void* o, void* win, MEVENT* ev, editCode cc)
 	    break;
 
 	case '\r':
+	case '\n':
 	    if ((rc = _nd_callback(obj, win)) == 0)
 		continue;
 	    return (rc < 0) ? eEXITFORM : eRETURN;
@@ -327,6 +330,7 @@ editButton(void* o, void* win, MEVENT* ev, editCode cc)
 	case KEY_RIGHT:
 	case '\t':	return eTAB;
 	case '\r':	
+	case '\n':
 			CLICKED(obj);
 			drawObj(obj,win);
 			REGULAR(obj);
@@ -405,6 +409,7 @@ editCheck(void* o, void* win, MEVENT* ev, editCode cc)
 	case KEY_DOWN:
 	case KEY_RIGHT:
 	case '\t':	return eTAB;
+	case '\n':
 	case '\r':	return eRETURN;
 	case ' ':	*data = !(*data);
 			if ((rc = _nd_callback(obj,win)) == 0)
@@ -670,6 +675,7 @@ editList(void* o, void* win, MEVENT* ev, editCode cc)
 	case ' ':
 	    if (ismenu)
 		continue;
+	case '\n':
 	case '\r':
 	    if (!(obj->flags & CR_LIST))
 		break;
