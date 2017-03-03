@@ -15,21 +15,21 @@ script interface for it, but I just haven't done that.
 
 To build, run
 
-   ./configure.sh
+   ./configure.sh && make
    
-from the toplevel directory, then cd into the src subdirectory
-and do a make.  This will generate the file libndialog.a, which
-can then be linked with your application (plus -lpanel & -lncurses,
-which are obviously needed)
+from the toplevel directory (you can also manually cd into the src
+subdirectory and do the make).  This will generate the file
+libndialog.a, which can then be linked with your application (plus
+-lpanel & -lncurses, which are obviously needed)
 
 There are four options that configure.sh accepts
 
-    --with-bsd-curses	Use BSD curses in available
+    --with-bsd-curses	Use BSD curses if available
     --with-getcap	Use the getcap() function to get
-			function get definitions.
+			function key definitions.
     --with-amalloc	Use my paranoid memory allocator to try and
 			track memory leaks
-    --shared		Try to build shared libraries (only tested on macos)
+    --shared		Try to build shared libraries
 
 
 A description of the library interface is in the directory src/doc,
