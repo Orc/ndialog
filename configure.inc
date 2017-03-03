@@ -1031,6 +1031,7 @@ AC_OUTPUT () {
 	else
 	    __dolink=:
 	fi
+	AC_PROG_INSTALL
 	AC_PROG ar
 	AC_PROG ranlib
 	AC_SUB LD_LIBRARY_PATH HERE
@@ -1103,7 +1104,11 @@ char **argv;
 	printf("%s.a\n", LIBRARY);
     }
     else if ( strcmp(ACTION, "install") == 0 ) {
+#if ${IS_BSD:-0}
+	execl("$BSD_INSTALL", "-c", "-m", "644", libname, argv[4], 0);
+#else
 	execl("$PROG_INSTALL", "-m", "644", libname, argv[4], 0);
+#endif
     }
     return 0;
 }
@@ -1479,6 +1484,8 @@ AC_CC_SHLIBS () {
 #
 AC_PROG_INSTALL () {
 
+    test "$PROG_INSTALL" && return 0
+
     DEST=`acLookFor install`
 
     LOGN "looking for install"
@@ -1507,6 +1514,7 @@ AC_PROG_INSTALL () {
     fi
 
     if [ "$IS_BSD" ]; then
+	BSD_INSTALL="$DEST"
 	PROG_INSTALL="$DEST -c"
     else
 	PROG_INSTALL="$DEST"
