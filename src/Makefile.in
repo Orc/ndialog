@@ -22,6 +22,7 @@ OBJS=nd_objects.o ndmenu.o ndwin.o ndedit.o ndutil.o dialog.o nderror.o \
      ndhelp.o list_widget.o indexed_menu.o keypad.o @AMALLOC@
 HEADERS= dialog.h ndialog.h
 HFILES= indexed_menu.h keypad.h
+TESTPROGS=fs testhtml testprog testobj mt testdialog testhtml lwb #withdialog
 
 CXXFLAGS=$(CFLAGS)
 NDIALOG=libndialog
@@ -31,18 +32,17 @@ all:    $(NDIALOG)
 $(NDIALOG): $(OBJS)
 	../librarian.sh make $(NDIALOG) ../VERSION $(OBJS) @LIBS@
 
-test:	fs testhtml testprog testobj mt testdialog testhtml lwb #withdialog
+test:	$(TESTPROGS)
 
-spotless: clean
-	rm -fr obj shared debug nd.tar.gz
 
-clean: libclean testclean
+distclean spotless clean:  libclean testclean
 
 libclean:
 	rm -f $(NDIALOG) `../librarian.sh files $(NDIALOG) ../VERSION`
+	rm -f *.o
 
 testclean:
-	rm -fr *.o testhtml testobj testprog testdialog mt
+	rm -f $(TESTPROGS)
 
 mt: mt.o $(NDIALOG)
 	$(CC) $(LFLAGS) -o mt mt.o $(NDIALOG) @LIBS@
@@ -66,12 +66,12 @@ fs: fileselector.c $(NDIALOG)
 	$(CC) $(CFLAGS) $(LFLAGS) -DTEST -o fs fileselector.c $(NDIALOG) @LIBS@
 
 install: all
-	-mkdir $(LIBDIR)
-	@INSTALL_DATA@ $(NDIALOG) $(LIBDIR)
-	-mkdir $(INCDIR)
-	@INSTALL_DATA@ $(HEADERS) $(INCDIR)
-	-mkdir $(INCDIR)/nd
-	@INSTALL_DATA@ $(HFILES) $(INCDIR)/nd
+	#-mkdir $(LIBDIR)
+	#@INSTALL_DATA@ $(NDIALOG) $(LIBDIR)
+	#-mkdir $(INCDIR)
+	#@INSTALL_DATA@ $(HEADERS) $(INCDIR)
+	#-mkdir $(INCDIR)/nd
+	#@INSTALL_DATA@ $(HFILES) $(INCDIR)/nd
 
 ## -- when I get an automatic dependency generator that works with
 ## -- both BSD and GNU make, everything below this line will be

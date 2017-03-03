@@ -146,5 +146,5 @@ fi
 
 MF_PATH_INCLUDE RANLIB ranlib true || AC_CONFIG RANLIB ':'
 
-AC_OUTPUT src/Makefile src/curse.h
+AC_OUTPUT Makefile src/Makefile src/curse.h
 
