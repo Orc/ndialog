@@ -51,7 +51,7 @@ main(int pointy, char **arguments)
     t = ObjChain(chain, chain);
 
     if (t == (Obj*)0)
-	perror("duplicate insert");
+	puts("ObjChain blocks duplicate inserts");
     else
 	puts("ERROR! duplicate inserts work");
 
