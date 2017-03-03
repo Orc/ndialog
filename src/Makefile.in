@@ -24,13 +24,12 @@ HEADERS= dialog.h ndialog.h
 HFILES= indexed_menu.h keypad.h
 
 CXXFLAGS=$(CFLAGS)
-NDIALOG=libndialog.a
+NDIALOG=libndialog
 
 all:    $(NDIALOG)
 
 $(NDIALOG): $(OBJS)
-	$(AR) cr $(NDIALOG) $(OBJS)
-	@RANLIB@ $(NDIALOG)
+	../librarian.sh make $(NDIALOG) ../VERSION $(OBJS) @LIBS@
 
 test:	fs testhtml testprog testobj mt testdialog testhtml lwb #withdialog
 
@@ -40,7 +39,7 @@ spotless: clean
 clean: libclean testclean
 
 libclean:
-	rm -f $(NDIALOG)
+	rm -f $(NDIALOG) `../librarian.sh files $(NDIALOG) ../VERSION`
 
 testclean:
 	rm -fr *.o testhtml testobj testprog testdialog mt

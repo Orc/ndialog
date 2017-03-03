@@ -8,7 +8,26 @@
 ac_help='--with-bsd-curses	Use BSD curses if available.
 --with-amalloc		Use a paranoid memory allocator
 --with-getcap		(--with-bsd-curses) use getcap() to get
-			function key definitions'
+			function key definitions
+--shared		Build shared libraries'
+
+LOCAL_AC_OPTIONS='
+set=`locals $*`;
+if [ "$set" ]; then
+    eval $set
+    shift 1
+else
+    ac_error=T;
+fi'
+
+locals() {
+    K=`echo $1 | $AC_UPPERCASE`
+    case "$K" in
+    --SHARED)
+                echo TRY_SHARED=T
+                ;;
+    esac
+}			
 
 
 # load in the configuration file
@@ -21,6 +40,8 @@ TARGET=ndialog
 AC_INIT ndialog
 
 AC_PROG_CC
+
+test "$TRY_SHARED" && AC_COMPILER_PIC && AC_CC_SHLIBS
 
 check_ncurses() {
     if AC_CHECK_HEADERS ncurses/curses.h; then
