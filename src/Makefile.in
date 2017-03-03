@@ -46,7 +46,7 @@ testclean:
 	rm -f $(TESTPROGS)
 
 mt: mt.o $(NDIALOG)
-	$(CC) $(LFLAGS) -o mt mt.o $(NDIALOG) @LIBS@
+	$(CC) $(LFLAGS) -o mt mt.o -lndialog @LIBS@
 
 testobj: testobj.c $(NDIALOG)
 	$(CC) $(CFLAGS) $(LFLAGS) -o testobj testobj.c -lndialog @LIBS@
