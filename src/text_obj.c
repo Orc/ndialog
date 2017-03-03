@@ -36,6 +36,8 @@
 /*
  * text_obj: functions for the text object and subclasses
  */
+#include <config.h>
+
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
@@ -346,7 +348,7 @@ drawText(void *o, void* w)
 	    mvwaddch(win, y+obj->depth-1, x+obj->width, NT_RARROW);
     }
 
-    if ((rc && DREW_A_BOX) && obj->width > 8 && obj->item.text.nrlines > 0) {
+    if ((rc & DREW_A_BOX) && obj->width > 8 && obj->item.text.nrlines > 0) {
 	int percent = ((obj->item.text.topy+obj->depth)*100) / obj->item.text.nrlines;
 	char bfr[8];
 
