@@ -141,7 +141,7 @@ if [ "$WITH_AMALLOC" ]; then
     AC_INCLUDE 'amalloc.h'
 else
     AC_SUB AMALLOC ''
-    AC_DEFINE adump 1
+    AC_DEFINE adump sync
 fi
 
 MF_PATH_INCLUDE RANLIB ranlib true || AC_CONFIG RANLIB ':'
