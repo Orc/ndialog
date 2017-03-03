@@ -37,6 +37,8 @@
  * new dialog library:  glue library to link with code written against
  * libdialog.
  */
+#include <config.h>
+
 #include "nd_objects.h"
 #include "curse.h"
 #include "dialog.h"

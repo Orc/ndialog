@@ -39,6 +39,8 @@
  * Bugs: This is a recursive descent parser, so we can't safely breakpoint
  * it and display only part of a file.
  */
+#include <config.h>
+
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>

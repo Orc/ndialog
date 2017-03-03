@@ -36,6 +36,8 @@
 /*
  * new dialog library:  libdialog compatability list/menu/checkboxes.
  */
+#include <config.h>
+
 #include "nd_objects.h"
 #include "curse.h"
 #include "dialog.h"

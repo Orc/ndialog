@@ -48,6 +48,8 @@
  * v      |           |
  * _ (0,x)+---------v-+
  */
+#include <config.h>
+
 #include <nd_objects.h>
 #include <dialog.h>
 #include "ndwin.h"

@@ -33,7 +33,8 @@
  *  THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "../config.h"
+#include <config.h>
+
 #include <ndialog.h>
 #include <stdlib.h>
 #include <stdio.h>

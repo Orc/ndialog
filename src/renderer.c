@@ -37,6 +37,8 @@
  * renderer: code that actually renders a helpfile html page
  */
 
+#include <config.h>
+
 #include "html.h"
 #include "bytecodes.h"
 #include <stdlib.h>

@@ -45,6 +45,9 @@
  * v      |              | |                   |
  * - (0,x)+--------------+ +-------------------+
  */
+
+#include <config.h>
+
 #include "nd_objects.h"
 #include "curse.h"
 #include "dialog.h"

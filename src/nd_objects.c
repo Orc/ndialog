@@ -36,6 +36,8 @@
 /*
  * new dialog library: object primitives.
  */
+#include <config.h>
+
 #include <unistd.h>
 #include <string.h>
 #include <errno.h>

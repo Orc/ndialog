@@ -38,6 +38,8 @@
  * objects
  */
 
+#include <config.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -100,12 +102,12 @@ helpfile(char *doc, char *prev)
 	ret = malloc(strlen(prev) + strlen(doc) + 2 );
 	strcpy(ret, prev);
 	if ( *doc == '#' ) {
-	    if  ( q = strrchr(ret, '#') )
+	    if  (( q = strrchr(ret, '#') ))
 		*q = 0;
 	}
-	else if ( q = strrchr(ret, '/') )
+	else if (( q = strrchr(ret, '/') ))
 	    *++q = 0;
-	else if ( q = strchr(ret, '#') )
+	else if (( q = strchr(ret, '#') ))
 	    *q = 0;
 
 	strcat(ret, doc);
@@ -153,7 +155,7 @@ _nd_help(char *document)
 	rc = MENU(chain, -1, -1, getHelpTopic(help), 0, 0);
 
 	if (rc == MENU_OK) {
-	    if ( topic = currentHtmlTag(help) ) {
+	    if (( topic = currentHtmlTag(help) )) {
 		cur->cursor = getHelpCursor(help);
 
 		up = cur;

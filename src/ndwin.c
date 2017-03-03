@@ -36,6 +36,8 @@
 /*
  * ndwin: routines to display things on the screen
  */
+#include <config.h>
+
 #include <errno.h>
 #include <string.h>
 

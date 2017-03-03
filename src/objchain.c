@@ -36,6 +36,8 @@
 /*
  * objchain(): routines that manage object chains.
  */
+#include <config.h>
+
 #include <string.h>
 #include <errno.h>
 #include <stdarg.h>

@@ -36,6 +36,8 @@
 /*
  * new dialog library: utility functions.
  */
+#include <config.h>
+
 #include <string.h>
 #include <errno.h>
 #include <stdarg.h>

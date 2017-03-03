@@ -11,6 +11,8 @@
  * It also needs to be made reentrant, via hackery to the
  * internals of ndialog.
  */
+#include <config.h>
+
 #include <dialog.h>
 #include <ndialog.h>
 
@@ -67,7 +69,7 @@ populateSelector(ndDisplay display)
 	for (de = readdir(dir); de; de = readdir(dir)) {
 	    if (de->d_name[0] == '.' && !de->d_name[1])
 		continue;
-	    if ( tmp = malloc(strlen(selector.curdir)+strlen(de->d_name)+9) ) {
+	    if (( tmp = malloc(strlen(selector.curdir)+strlen(de->d_name)+9) )) {
 		sprintf(tmp, "%s/%s", selector.curdir, de->d_name);
 		rc = stat(tmp, &st);
 		free(tmp);

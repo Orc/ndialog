@@ -53,6 +53,8 @@
  *               1 -- CANCEL was pressed
  *               2 -- ESC was pressed
  */
+#include <config.h>
+
 #include "ndwin.h"
 #include "nd_objects.h"
 

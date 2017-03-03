@@ -35,6 +35,8 @@
  * keypad() for ndialog on curses that don't have arrow and/or function
  * key support.
  */
+#include <config.h>
+
 #include "curse.h"
 
 #if HAVE_KEYPAD

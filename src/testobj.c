@@ -1,6 +1,8 @@
 /*
  * test the Obj Class
  */
+#include <config.h>
+
 #include <assert.h>
 #include <stdio.h>
 

@@ -36,12 +36,14 @@
 /*
  * ndialog: new dialog library
  */
+#include <config.h>
+
 #include "curse.h"
 #include <ndialog.h>
 #include <string.h>
 
 #define NR_ND_COLORS	10
-int nd_colors[NR_ND_COLORS] = { 0, };
+int nd_colors[NR_ND_COLORS+1] = { 0, };
 int nr_nd_colors = NR_ND_COLORS;
 
 #if HAVE_PANEL
