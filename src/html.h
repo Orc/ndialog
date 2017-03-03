@@ -1,5 +1,9 @@
 /*
  * html.h: global header for html.c
+ *
+ * Copyright (C) 1996-2017 David L Parsons.
+ * The redistribution terms are provided in the COPYRIGHT file that must
+ * be distributed with this source code.
  */
 #ifndef HTMLHELP_D
 #define HTMLHELP_D

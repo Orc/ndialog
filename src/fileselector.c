@@ -1,4 +1,9 @@
 /*
+ * Copyright (C) 1996-2017 David L Parsons.
+ * The redistribution terms are provided in the COPYRIGHT file that must
+ * be distributed with this source code.
+ */
+/*
  * need to abstract this into a general-purpose selector box.
  *
  * I need to pass (a) directory open/read/close routines [for

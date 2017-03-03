@@ -1,6 +1,12 @@
 /*
  * htmlhelp: html help file interpreter.
  *
+ * Copyright (C) 1996-2017 David L Parsons.
+ * The redistribution terms are provided in the COPYRIGHT file that must
+ * be distributed with this source code.
+ */
+
+/*
  * Bugs: This is a recursive descent parser, so we can't safely breakpoint
  * it and display only part of a file.
  */
