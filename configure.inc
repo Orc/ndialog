@@ -1082,12 +1082,7 @@ char **argv;
 	    execl("${PROG_RANLIB}", "ranlib", argv[3], 0);
 	wait(&pid);
 	unlink(LIBRARY);
-
-	linkcmd = malloc(strlen("${__dolink}")
-		       + strlen(libname)
-		       + strlen(LIBRARY) + 7);
-	sprintf(linkcmd, "${__dolink} \"%s\" \"%s\"", libname, LIBRARY);
-	system(linkcmd);
+	symlink(libname, LIBRARY);
     }
     else if ( strcmp(ACTION, "files") == 0 ) {
 	printf("%s.a\n", LIBRARY);
