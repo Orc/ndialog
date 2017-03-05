@@ -143,6 +143,28 @@ newHelp(int x, int y, int width, int height,
  */
 extern char rillyrillylongblankstring[];
 
+
+	
+/*
+ * waddch() for drawTextLine -- expands tabs to multiples of 8 spaces (instead of just
+ * dumping them to the window and causing overlap)
+ */
+static void
+dtladdch(WINDOW *win, Obj *obj, int ch, int *xp)
+{
+    if ( ch == '\t' ) {
+	do {
+	    dtladdch(win, obj, ' ', xp);
+	} while ( *xp % 8 );
+    }
+    else {
+	if ( *xp >= obj->item.text.off_x && *xp < obj->item.text.off_x+obj->width)
+	    waddch(win, ch);
+	(*xp)++;
+    }
+} /* dtladdch */
+
+
 /*
  * drawTextLine() draws a single line from a Text object
  */
@@ -152,9 +174,8 @@ drawTextLine(WINDOW *win, Obj *obj, int idx)
     int xp;
     char *p;
 
-    for (xp=0, p = obj->item.text.lines[idx]; *p != 0 && *p != '\n'; ++p, ++xp)
-	if (xp >= obj->item.text.off_x && xp < obj->item.text.off_x+obj->width)
-	    waddch(win, *p);
+    for (xp=0, p = obj->item.text.lines[idx]; *p != 0 && *p != '\n'; ++p)
+	dtladdch(win, obj, *p, &xp);
 } /* drawTextLine */
 
 
