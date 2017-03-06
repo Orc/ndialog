@@ -17,18 +17,18 @@
 enum boxtypes { YESNO=1, MSG, INPUT, INFO, TEXT, LIST, CHECK, RADIO };
 
 struct x_option opts[] = {
-    { 'c',   0, "clear",   0,       "clear the screen when finished" },
-    { 't',   0, "title",   "TITLE", "the title for the dialog box" },
-    { 'h',   0, "hline",   "TITLE", "a title for the bottom of the dialog box" },
-    { 'f',   0, "hfile",   "FILE",  "a helpfile to be displayed by ? or F1" },
-    { YESNO, 0, "yesno",   0,       "a yes/no dialog box (text height width)" },
-    { MSG,   0, "msgbox",  0,       "a message box (text height width)" },
-    { INFO,  0, "infobox", 0,       "an info box (text height width)" },
-    { INPUT, 0, "inputbox",0,       "an input box (text height width)" },
-    { TEXT,  0, "textbox", 0,       "a text box (file height width)" },
-    { LIST,  0, "menu",    0,       "a menu (text height width menu-height items)" },
-    { CHECK, 0, "checklist",0,      "a checklist (text height width list-height items)" },
-    { RADIO, 0, "radiolist",0,      "a radiolist (text height width list-height items)" },
+    { 'c',   0, "clear",   0,       0 },
+    { 't',   0, "title",   "TITLE", 0 },
+    { 'h',   0, "hline",   "TITLE", 0 },
+    { 'f',   0, "hfile",   "FILE",  0 },
+    { YESNO, 0, "yesno",   0,       "text height width" },
+    { MSG,   0, "msgbox",  0,       "text height width" },
+    { INFO,  0, "infobox", 0,       "text height width" },
+    { INPUT, 0, "inputbox",0,       "text height width [initial-text]" },
+    { TEXT,  0, "textbox", 0,       "file height width)" },
+    { LIST,  0, "menu",    0,       "text height width menu-height [tag item] ..." },
+    { CHECK, 0, "checklist",0,      "text height width list-height [tag item status] ..." },
+    { RADIO, 0, "radiolist",0,      "text height width list-height [tag item status] ..." },
     
 };
 
@@ -52,9 +52,18 @@ char *title = 0;
 void
 usage(int retcode)
 {
+    int i;
+    
     fprintf(stderr, "usage: dialog --clear\n"
 		    "       dialog [--title title] [--clear] [--hline line] "
 		    "[--hfile file] box-args\n");
+
+    fprintf(stderr, "\nBox-args:\n");
+
+    for (i=0; i < NROPTS; i++) {
+	if (opts[i].description)
+	    fprintf(stderr, "  --%-10s %s\n", opts[i].name, opts[i].description);
+    }
     exit(retcode);
 }
 
@@ -103,12 +112,12 @@ add_box(enum boxtypes boxtype, int argc, char **argv)
 	exit(1);
     }
     boxes[nrboxes].boxtype = boxtype;
+    boxes[nrboxes].nrdata = 0;
     
     count = argc - x_optind;
     switch (boxtype) {
     case YESNO:
     case MSG:
-    case INPUT:
     case INFO:
     case TEXT:	/* all need 3 more arguments */
 		if ( count != 3 ) {
@@ -119,6 +128,25 @@ add_box(enum boxtypes boxtype, int argc, char **argv)
 		boxes[nrboxes].text = argv[x_optind++];
 		boxes[nrboxes].height = box_atoi(argv[x_optind++], (boxtype=INFO) ? 3 : 7);
 		boxes[nrboxes].width = box_atoi(argv[x_optind++], 2);
+		break;
+    case INPUT:
+		if ( count < 3 || count > 4 ) {
+		    fprintf(stderr, "usage: dialog --inputbox text height width [init string]\n");
+		    exit(1);
+		}
+		boxes[nrboxes].text = argv[x_optind++];
+		boxes[nrboxes].height = box_atoi(argv[x_optind++], 7);
+		boxes[nrboxes].width = box_atoi(argv[x_optind++], 2);
+		if ( count == 4 ) {
+		    boxes[nrboxes].nrdata = 1;
+		    boxes[nrboxes].data = malloc(sizeof (char**) );
+		    if ( boxes[nrboxes].data == 0 ) {
+			fprintf(stderr, "dialog: %s allocating init-string\n",
+					strerror(errno));
+			exit(1);
+		    }
+		    boxes[nrboxes].data[0] = argv[x_optind++];
+		}
 		break;
     case LIST:
 		if ( (count < 5) || (count % 2 == 0) ) {
@@ -224,7 +252,6 @@ handle_box(struct box *box)
     int size;
     int ch=0, sc=0;
 
-    /*{ YESNO, MSG, INPUT, INFO, TEXT, LIST, CHECK };*/
     switch (box->boxtype) {
     case YESNO:
 		return dialog_yesno(title, box->text, box->height, box->width);
@@ -236,11 +263,25 @@ handle_box(struct box *box)
 		return text_box(box);
 
     case INPUT:
-		if ( box->width < 0 )
-		    result = alloca(strwidth(box->text)+3);
+		size = 80;
+		
+		if ( box->nrdata > 0 && strlen(box->data[0]) > 80)
+		    size = strlen(box->data[0]);
+
+		if ( box->width > size )
+		    size = box->width;
+
+		if ( strwidth(box->text) > size )
+		    size = strwidth(box->text);
+
+		result = alloca(size+3);
+		if ( box->nrdata ) {
+		    strncpy(result, box->data[0], size);
+		    result[size] = 0;
+		}
 		else
-		    result = alloca(box->width);
-		result[0] = 0;
+		    result[0] = 0;
+		
 		rc = dialog_inputbox(title,box->text,box->height,box->width, result);
 		if ( rc == 0 )
 		    fprintf(stderr, "%s\n", result);
