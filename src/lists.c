@@ -124,7 +124,7 @@ ndialog_list(char *title, char *prompt,
 	    itemwidth = tw;
 	list[x].help = 0;
     }
-    if ((mode == ND_A_RADIOLIST) && (nr_selected != 1)) {
+    if ((mode == ND_A_RADIOLIST) && (nr_selected > 1)) {
 	/* oops.  Radio lists can only have one item selected */
 	errno = EINVAL;
 	goto byebye;
