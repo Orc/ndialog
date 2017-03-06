@@ -11,8 +11,7 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
-
-extern int errno;
+#include <errno.h>
 
 
 enum boxtypes { YESNO=1, MSG, INPUT, INFO, TEXT, LIST, CHECK, RADIO };
