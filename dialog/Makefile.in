@@ -1,15 +1,14 @@
 PROGS=dialog
-LIB=$(../librarian.sh files libndialog ../VERSION)
 LFLAGS += -L../src
 CFLAGS += -I../src
 
 all: $(PROGS)
 
-$(PROGS): dialog.o basis/options.o ../src/$(LIB)
+$(PROGS): dialog.o basis/options.o ../src/libndialog
 	$(CC) $(LFLAGS) -o dialog dialog.o basis/options.o -lndialog @LIBS@
 
-../src/$(LIB):
-	cd ../src;make $(LIB)
+../src/libndialog:
+	cd ../src;make
 
 
 clean:
