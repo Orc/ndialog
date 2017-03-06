@@ -54,7 +54,8 @@ void
 usage(int retcode)
 {
     fprintf(stderr, "usage: dialog --clear\n"
-		    "       dialog [--title title] [--clear] [--hline line] [--hfile file] box-options\n");
+		    "       dialog [--title title] [--clear] [--hline line] "
+		    "[--hfile file] box-args\n");
     exit(retcode);
 }
 

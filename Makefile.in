@@ -1,6 +1,8 @@
 all test clean install:
 	cd src; make $@
+	cd dialog; make $@
 
 spotless distclean:
 	cd src; make $@
+	cd dialog; make $@
 	rm -f @GENERATED_FILES@ @CONFIGURE_FILES@ ./librarian.sh
