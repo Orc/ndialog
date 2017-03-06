@@ -1636,7 +1636,8 @@ AC_FAIL() {
 __ac_config_sed() {
 
 
-    test -x config.sed && return
+    test "$__config_sed" && return
+    __config_sed=T
 
     echo "generating config.sed"
 
