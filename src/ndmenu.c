@@ -162,6 +162,8 @@ strwidth(char *str)
 		width = x;
 	    x = 0;
 	}
+	else if (*str == '\t' )
+	    x = 8*+(1+(x/8));
 	else if (*str)
 	    x++;
     } while (*str++);
