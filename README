@@ -6,11 +6,8 @@ originally wrote it when my attempts to shoehorn new features into
 with the existing mass of code.
 
 
-Currently I only implement the library interface because the
-application I was using it for was the Mastodon installer, which
-is a single C program that wraps a UI around the business of
-installing a system.   It would not be difficult to write a shell
-script interface for it, but I just haven't done that.
+The library sources are in the src subdirectory; a copy of the dialog(1)
+program is in the dialog subdirectory.
 
 
 To build, run
