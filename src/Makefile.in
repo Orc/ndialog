@@ -19,7 +19,7 @@ INCDIR=@prefix@/include
 
 OBJS=nd_objects.o ndmenu.o ndwin.o ndedit.o ndutil.o dialog.o nderror.o \
      ndialog.o yesno.o objchain.o lists.o html.o renderer.o text_obj.o \
-     ndhelp.o list_widget.o indexed_menu.o keypad.o @AMALLOC@
+     ndhelp.o list_widget.o indexed_menu.o keypad.o version.o @AMALLOC@
 HEADERS= dialog.h ndialog.h
 HFILES= indexed_menu.h keypad.h
 TESTPROGS=fs testhtml testprog testobj mt testdialog testhtml lwb #withdialog
@@ -73,6 +73,9 @@ install: all
 	#@INSTALL_DATA@ $(HEADERS) $(INCDIR)
 	#-mkdir $(INCDIR)/nd
 	#@INSTALL_DATA@ $(HFILES) $(INCDIR)/nd
+
+version.o: version.c ../VERSION
+	$(CC) $(CFLAGS) -DVERSION=\"`cat ../VERSION`\" -c version.c
 
 ## -- when I get an automatic dependency generator that works with
 ## -- both BSD and GNU make, everything below this line will be

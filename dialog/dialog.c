@@ -53,6 +53,9 @@ void
 usage(int retcode)
 {
     int i;
+    extern char ndialog_version[];
+    
+    fprintf(stderr, "dialog (ndialog %s)\n\n", ndialog_version);
     
     fprintf(stderr, "usage: dialog --clear\n"
 		    "       dialog [--title title] [--clear] [--hline line] "
