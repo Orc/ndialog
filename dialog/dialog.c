@@ -216,7 +216,7 @@ scrollable_box(struct box *box, char *data, off_t size)
     chain = ObjChain(chain,
 		     newCancelButton(2,"CANCEL", 0, 0));
 
-    rc = MENU(chain, -1, -1, title, box->text, 0);
+    rc = MENU(chain, -1, -1, title ? title : box->text, 0, 0);
     deleteObjChain(chain);
     return rc;
 }
