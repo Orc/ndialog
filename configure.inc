@@ -1084,7 +1084,16 @@ LIBRARY=\$1; shift
 VERSION=\$1; shift
 
 case "\$ACTION" in
-make)   ${PROG_AR} crv \$LIBRARY.a "\$@"
+make)   # first strip out any libraries that might
+	# be passed in on the object line
+	objs=
+	for x in "\$@"; do
+	    case "\$x" in
+	    -*) ;;
+	    *) objs="\$objs \$x" ;;
+	    esac
+	done
+	${PROG_AR} crv \$LIBRARY.a \$objs
 	${PROG_RANLIB} \$LIBRARY.a
 	rm -f \$LIBRARY
 	${__dolink} \$LIBRARY.a \$LIBRARY
