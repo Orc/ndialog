@@ -36,7 +36,6 @@ test:	$(TESTPROGS)
 
 
 distclean spotless clean:  libclean testclean
-	rm -f @SCAFFOLD_FILES@
 
 libclean:
 	rm -f $(NDIALOG) `../librarian.sh files $(NDIALOG) ../VERSION`
