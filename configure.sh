@@ -55,16 +55,22 @@ check_ncurses() {
 	$__fail 1
     fi
 
-    if AC_LIBRARY start_color -lncurse -lcurses; then
-	case "$AC_LIBS" in
-	*-lncurses*)	WITH_NCURSES=1;;
-	*-lcurses*)	WITH_CURSES=1 ;;
-	*)		WITH_CURSES=1 ;; # I think?
-	esac
-	return ${WITH_NCURSES:-0}
-    elif AC_LIBRARY initscr -lcurses "-lcurses -ltermcap"; then
+    if LIBS="-lncurses" AC_CHECK_FUNCS start_color; then
+	WITH_NCURSES=1
+	AC_LIBS="$AC_LIBS -lncurses"
+	return 0
+    elif LIBS="-lcurses" AC_CHECK_FUNCS start_color; then
+	WITH_NCURSES=1
+	AC_LIBS="$AC_LIBS -lcurses"
+	return 0
+    elif LIBS="-lcurses" AC_CHECK_FUNCS initscr; then
 	WITH_BSD_CURSES=1
-	return 0	# have a curses lib, but it's not ncurses.
+	AC_LIBS="$AC_LIBS -lcurses"
+	return 1	# have a curses lib, but it's not ncurses.
+    elif LIBS="-lcurses -ltermcap" AC_CHECK_FUNCS initscr; then
+	WITH_BSD_CURSES=1
+	AC_LIBS="$AC_LIBS -lcurses -ltermcap"
+	return 1	# have a curses lib, but it's not ncurses.
     fi
     $__fail 1
 }
@@ -74,8 +80,13 @@ check_curses() {
     if AC_CHECK_HEADERS curses.h; then
 	AC_SUB CURSES_HEADER curses.h
 	# possibly.  
-	if AC_LIBRARIES initscr "-lcurses -ltermcap"; then
+	if LIBS="-lcurses" AC_CHECK_FUNCS initscr; then
 	    WITH_BSD_CURSES=1
+	    AC_LIBS="$AC_LIBS -lcurses"
+	    return 0
+	elif LIBS="-lcurses -ltermcap" AC_CHECK_FUNCS initscr; then
+	    WITH_BSD_CURSES=1
+	    AC_LIBS="$AC_LIBS -lcurses -ltermcap"
 	    return 0
 	fi
     fi
@@ -95,8 +106,13 @@ elif check_ncurses; then
 	check_panel=T
     fi
     if [ "$check_panel" ]; then
-	if AC_LIBRARY new_panel -lpanel; then
+	if LIBS="-lpanel $AC_LIBS" AC_CHECK_FUNCS new_panel; then
 	    HAVE_PANEL=1
+	    AC_LIBS="-lpanel $AC_LIBS"
+	    AC_SUB PANEL_HEADER $panel_header
+	elif LIBS="$AC_LIBS -lpanel" AC_CHECK_FUNCS new_panel; then
+	    HAVE_PANEL=1
+	    AC_LIBS="$AC_LIBS -lpanel"
 	    AC_SUB PANEL_HEADER $panel_header
 	fi
     fi
@@ -130,5 +146,5 @@ fi
 
 MF_PATH_INCLUDE RANLIB ranlib true || AC_CONFIG RANLIB ':'
 
-AC_OUTPUT Makefile src/Makefile src/curse.h
+AC_OUTPUT Makefile src/Makefile src/curse.h dialog/Makefile
 
