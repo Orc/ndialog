@@ -74,7 +74,9 @@ usage(int retcode)
 char *
 whatis(enum boxtypes boxtype)
 {
-    for ( int i=0; i < NROPTS; i++ )
+    int i;
+
+    for ( i=0; i < NROPTS; i++ )
 	if ( opts[i].optval == boxtype )
 	    return opts[i].name;
 
@@ -253,6 +255,7 @@ handle_box(struct box *box)
     char *result;
     int rc;
     int size;
+    int i;
     int ch=0, sc=0;
 
     switch (box->boxtype) {
@@ -291,7 +294,7 @@ handle_box(struct box *box)
 		return rc;
     case LIST:
 		size = 0;
-		for ( int i = 0; i < box->nrdata; i++ )
+		for ( i = 0; i < box->nrdata; i++ )
 		    if ( strlen(box->data[i*2]) > size )
 			size = strlen(box->data[i*2]);
 
@@ -306,7 +309,7 @@ handle_box(struct box *box)
     case CHECK:
     case RADIO:
 		size = 0;
-		for ( int i = 0; i < box->nrdata; i++ )
+		for ( i = 0; i < box->nrdata; i++ )
 		    size += strlen(box->data[1+(i*3)]) + 1;
 
 		result = alloca(size+1);
@@ -336,7 +339,7 @@ char **argv;
     char *bottomtitle = 0;
     char *helpfile = 0;
     char *cl = 0, *term, *bfr = alloca(5120);
-    int rc, opt;
+    int i, rc, opt;
 
     x_opterr = 1;
     
@@ -376,8 +379,8 @@ char **argv;
 	if ( bottomtitle )
 	    use_helpline(bottomtitle);
 
-	for ( int x = 0; x < nrboxes; x++ )
-	    rc = handle_box(&boxes[x]);
+	for ( i = 0; i < nrboxes; i++ )
+	    rc = handle_box(&boxes[i]);
 	end_dialog();
     }
     
