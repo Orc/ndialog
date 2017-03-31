@@ -55,21 +55,11 @@ check_ncurses() {
 	$__fail 1
     fi
 
-    if LIBS="-lncurses" AC_CHECK_FUNCS start_color; then
+    if AC_LIBRARY start_color -lncurses -lcurses; then
 	WITH_NCURSES=1
-	AC_LIBS="$AC_LIBS -lncurses"
 	return 0
-    elif LIBS="-lcurses" AC_CHECK_FUNCS start_color; then
-	WITH_NCURSES=1
-	AC_LIBS="$AC_LIBS -lcurses"
-	return 0
-    elif LIBS="-lcurses" AC_CHECK_FUNCS initscr; then
+    elif AC_LIBRARY initscr -lcurses "-lcurses -ltermcap"; then
 	WITH_BSD_CURSES=1
-	AC_LIBS="$AC_LIBS -lcurses"
-	return 1	# have a curses lib, but it's not ncurses.
-    elif LIBS="-lcurses -ltermcap" AC_CHECK_FUNCS initscr; then
-	WITH_BSD_CURSES=1
-	AC_LIBS="$AC_LIBS -lcurses -ltermcap"
 	return 1	# have a curses lib, but it's not ncurses.
     fi
     $__fail 1
@@ -80,13 +70,8 @@ check_curses() {
     if AC_CHECK_HEADERS curses.h; then
 	AC_SUB CURSES_HEADER curses.h
 	# possibly.  
-	if LIBS="-lcurses" AC_CHECK_FUNCS initscr; then
+	if AC_LIBRARY initscr -lcurses '-lcurses -ltermcap'; then
 	    WITH_BSD_CURSES=1
-	    AC_LIBS="$AC_LIBS -lcurses"
-	    return 0
-	elif LIBS="-lcurses -ltermcap" AC_CHECK_FUNCS initscr; then
-	    WITH_BSD_CURSES=1
-	    AC_LIBS="$AC_LIBS -lcurses -ltermcap"
 	    return 0
 	fi
     fi
