@@ -164,24 +164,25 @@ __MAKEDOTO() {
 #
 AC_CHECK_HEADERS () {
 
-    __hdr=$1
     AC_PROG_CPP
 
-    shift
-    (   echo "/* AC_CHECK_HEADERS */"
-	echo "#include <${__hdr}>" ) > ngc$$.c
+    for __hdr in "$@"; do
+	(   echo "/* AC_CHECK_HEADERS */"
+	    echo "#include <${__hdr}>" ) > ngc$$.c
 
-    LOGN "looking for header $__hdr"
+	LOGN "looking for header $__hdr"
 
-    if $AC_CPP_FILTER ngc$$.c >/dev/null; then
-	AC_DEFINE 'HAVE_'`echo $__hdr | $AC_UPPERCASE | tr './' '_'` 1
-	rc=0
-	LOG " (found)"
-    else
-	LOG " (not found)"
-	rc=1
-    fi
-    __remove ngc$$.c
+	if $AC_CPP_FILTER ngc$$.c >/dev/null; then
+	    AC_DEFINE 'HAVE_'`echo $__hdr | $AC_UPPERCASE | tr './' '_'` 1
+	    rc=0
+	    LOG " (found)"
+	else
+	    rc=1
+	    LOG " (not found)"
+	fi
+	__remove ngc$$.c
+    done
+    # return code is only meaningful if one header is checked
     return $rc
 }
 
@@ -1582,6 +1583,8 @@ EOF
 AC_PROG_CPP () {
     test "$AC_CPP_FILTER" && return
 
+    AC_PROG_CC
+
     if [ "$AC_CPP_PROG" ]; then
 	DEST=$AC_CPP_PROG
     else
@@ -1593,6 +1596,12 @@ AC_PROG_CPP () {
 
     unset fail
     LOGN "Looking for cpp"
+    
+    if acCheckCPP $AC_CC -E; then
+	TLOG " (using $AC_CC -E as a cpp pipeline)"
+	return 0
+    fi
+    
     if [ "$DEST" ]; then
 	TLOGN " ($DEST)"
 	acCheckCPP $DEST "$CPPFLAGS" || \
