@@ -1383,11 +1383,11 @@ __AC_ELF_LIBRARIAN() {
     LDCONFIG=`AC_PATH=/sbin:/usr/sbin:/usr/local/sbin acLookFor ldconfig`
 
     if [ "$LDCONFIG" ]; then
-	case `uname -s 2>/dev/null` in
-	*[Bb][Ss][Dd])	# *bsd ldconfig doesn't automerge; it
-			# needs to explicitly be told to do so
-			# or it will blow away your hints file.
-			$LDCONFIG="$LDCONFIG -m" ;;
+	case `uname -s 2>/dev/null | $AC_UPPERCASE` in
+	*BSD)	# *bsd ldconfig doesn't automerge; it
+		# needs to explicitly be told to do so
+		# or it will blow away your hints file.
+		LDCONFIG="$LDCONFIG -m" ;;
 	esac
     fi
     
