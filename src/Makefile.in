@@ -66,7 +66,7 @@ fs: fileselector.c $(NDIALOG)
 	$(CC) $(CFLAGS) $(LFLAGS) -DTEST -o fs fileselector.c -lndialog @LIBS@
 
 install: all
-	../librarian.sh install $(NDIALOG) ../VERSION
+	../librarian.sh install $(NDIALOG) ../VERSION $(LIBDIR)
 	@INSTALL_DIR@ $(INCDIR)
 	@INSTALL_DATA@ $(HEADERS) $(INCDIR)
 	@INSTALL_DIR@ $(INCDIR)/nd
