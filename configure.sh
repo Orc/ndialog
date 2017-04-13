@@ -90,19 +90,12 @@ elif check_ncurses; then
 	panel_header=panel.h
 	check_panel=T
     fi
-    if [ "$check_panel" ]; then
-	if LIBS="-lpanel $AC_LIBS" AC_CHECK_FUNCS new_panel; then
-	    HAVE_PANEL=1
-	    AC_LIBS="-lpanel $AC_LIBS"
-	    AC_SUB PANEL_HEADER $panel_header
-	elif LIBS="$AC_LIBS -lpanel" AC_CHECK_FUNCS new_panel; then
-	    HAVE_PANEL=1
-	    AC_LIBS="$AC_LIBS -lpanel"
-	    AC_SUB PANEL_HEADER $panel_header
-	fi
+    if [ "$check_panel" ] && AC_LIBRARY new_panel -lpanel; then
+	HAVE_PANEL=1
+	AC_SUB PANEL_HEADER $panel_header
     fi
 fi
-AC_CHECK_HEADERS errno.h
+
 test "$WITH_GETCAP" && AC_DEFINE WITH_GETCAP $WITH_GETCAP
 AC_DEFINE WITH_NCURSES ${WITH_NCURSES:-0}
 AC_DEFINE WITH_BSD_CURSES ${WITH_BSD_CURSES:-0}
@@ -111,15 +104,15 @@ AC_DEFINE HAVE_PANEL ${HAVE_PANEL:-0}
 if [ ! "$WITH_BSD_CURSES" ]; then
     # check for particular ncurses functions so we can dummy them
     # if need be.
-    LIBS="$AC_LIBS" AC_CHECK_FUNCS wattr_set
-    LIBS="$AC_LIBS" AC_CHECK_FUNCS waddnstr
-    LIBS="$AC_LIBS" AC_CHECK_FUNCS beep
-    LIBS="$AC_LIBS" AC_CHECK_FUNCS curs_set
-    LIBS="$AC_LIBS" AC_CHECK_FUNCS ripoffline
-    LIBS="$AC_LIBS" AC_CHECK_FUNCS start_color
+    AC_CHECK_FUNCS wattr_set
+    AC_CHECK_FUNCS waddnstr
+    AC_CHECK_FUNCS beep
+    AC_CHECK_FUNCS curs_set
+    AC_CHECK_FUNCS ripoffline
+    AC_CHECK_FUNCS start_color
 fi
-LIBS="$AC_LIBS" AC_CHECK_FUNCS doupdate
-LIBS="$AC_LIBS" AC_CHECK_FUNCS keypad
+AC_CHECK_FUNCS doupdate
+AC_CHECK_FUNCS keypad
 
 if [ "$WITH_AMALLOC" ]; then
     AC_SUB AMALLOC amalloc.o
@@ -129,6 +122,7 @@ else
     AC_DEFINE 'adump()' '1'
 fi
 
+AC_CHECK_HEADERS errno.h
 MF_PATH_INCLUDE RANLIB ranlib true || AC_CONFIG RANLIB ':'
 
 AC_OUTPUT Makefile src/Makefile src/curse.h dialog/Makefile
