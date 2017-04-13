@@ -1537,7 +1537,7 @@ AC_PROG_INSTALL () {
     fi
 
     __config_files="$__config_files config.md"
-    AC_SUB 'INSTALL_DIR' "./config.md"
+    AC_SUB 'INSTALL_DIR' "$__cwd/config.md"
     echo "#! /bin/sh"                                   > ""$__cwd"/config.md"
     echo "# script generated" `date` "by configure.sh" >> ""$__cwd"/config.md"
     echo                                               >> ""$__cwd"/config.md"
