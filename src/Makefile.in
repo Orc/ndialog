@@ -66,12 +66,12 @@ fs: fileselector.c $(NDIALOG)
 	$(CC) $(CFLAGS) $(LFLAGS) -DTEST -o fs fileselector.c -lndialog @LIBS@
 
 install: all
-	#-mkdir $(LIBDIR)
-	#@INSTALL_DATA@ $(NDIALOG) $(LIBDIR)
-	#-mkdir $(INCDIR)
-	#@INSTALL_DATA@ $(HEADERS) $(INCDIR)
-	#-mkdir $(INCDIR)/nd
-	#@INSTALL_DATA@ $(HFILES) $(INCDIR)/nd
+	-mkdir $(LIBDIR)
+	@INSTALL_DATA@ $(NDIALOG) $(LIBDIR)
+	-mkdir $(INCDIR)
+	@INSTALL_DATA@ $(HEADERS) $(INCDIR)
+	-mkdir $(INCDIR)/nd
+	@INSTALL_DATA@ $(HFILES) $(INCDIR)/nd
 
 version.o: version.c ../VERSION
 	$(CC) $(CFLAGS) -DVERSION=\"`cat ../VERSION`\" -c version.c

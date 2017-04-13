@@ -10,6 +10,8 @@ $(PROGS): dialog.o basis/options.o ../src/libndialog
 ../src/libndialog:
 	cd ../src;make
 
+include:
+	echo "nothing to install from `pwd`"
 
 clean:
 	rm -f dialog dialog.o basis/options.o
