@@ -5,4 +5,4 @@ all test clean install:
 spotless distclean:
 	cd src; make $@
 	cd dialog; make $@
-	rm -f @GENERATED_FILES@ @CONFIGURE_FILES@ ./librarian.sh
+	@DISTCLEAN@ @GENERATED_FILES@ @CONFIGURE_FILES@
