@@ -97,9 +97,9 @@ elif check_ncurses; then
 fi
 
 test "$WITH_GETCAP" && AC_DEFINE WITH_GETCAP $WITH_GETCAP
-AC_DEFINE WITH_NCURSES ${WITH_NCURSES:-0}
-AC_DEFINE WITH_BSD_CURSES ${WITH_BSD_CURSES:-0}
-AC_DEFINE HAVE_PANEL ${HAVE_PANEL:-0}
+test "$WITH_NCURSES" && AC_DEFINE WITH_NCURSES $WITH_NCURSES
+test "$WITH_BSD_CURSES" && AC_DEFINE WITH_BSD_CURSES $WITH_BSD_CURSES
+test $HAVE_PANEL && AC_DEFINE HAVE_PANEL $HAVE_PANEL
 
 if [ ! "$WITH_BSD_CURSES" ]; then
     # check for particular ncurses functions so we can dummy them
@@ -113,6 +113,7 @@ if [ ! "$WITH_BSD_CURSES" ]; then
 fi
 AC_CHECK_FUNCS doupdate
 AC_CHECK_FUNCS keypad
+AC_CHECK_FUNCS getmouse
 
 if [ "$WITH_AMALLOC" ]; then
     AC_SUB AMALLOC amalloc.o

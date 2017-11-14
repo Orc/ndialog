@@ -14,7 +14,7 @@
 #   ifdef HAVE_PANEL
 #      include <@PANEL_HEADER@>
 #   endif
-#   ifdef KEY_MOUSE
+#   ifdef HAVE_GETMOUSE
 #       define VERMIN	1
 #   else
 #       define VERMIN	0
