@@ -18,6 +18,7 @@ clean:
 
 spotless distclean: clean
 
+test: all
 
 basis/options.o: basis/options.c
 	$(CC) $(CFLAGS) -o $@ -c $<
